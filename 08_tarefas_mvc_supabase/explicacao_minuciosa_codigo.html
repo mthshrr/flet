@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Apostila Autoinstrutiva: Código-Fonte Explicado Linha por Linha - MVC com Flet e Supabase</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 16mm 14mm 16mm 14mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #24292e;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4, h5 {
+      color: #1a365d;
+      font-weight: 700;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      font-size: 22pt;
+      border-bottom: 3px solid #2b6cb0;
+      padding-bottom: 6px;
+      margin-top: 0;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 15pt;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 5px;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      color: #2b6cb0;
+    }
+
+    h3 {
+      font-size: 12pt;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      color: #2d3748;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    .capa {
+      text-align: center;
+      padding: 30px 20px;
+      border: 2px solid #2b6cb0;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ebf8ff 0%, #ffffff 100%);
+      margin-bottom: 25px;
+      page-break-after: always;
+    }
+
+    .capa h1 {
+      border: none;
+      font-size: 22pt;
+      color: #1a365d;
+      margin-bottom: 8px;
+    }
+
+    .capa .subtitulo {
+      font-size: 13pt;
+      color: #4a5568;
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+
+    .capa .meta-info {
+      font-size: 10pt;
+      color: #2d3748;
+      margin-top: 25px;
+      line-height: 1.7;
+      border-top: 1px dashed #cbd5e0;
+      padding-top: 15px;
+    }
+
+    .box-destaque {
+      background-color: #ebf8ff;
+      border-left: 5px solid #3182ce;
+      padding: 10px 14px;
+      margin: 14px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-destaque h4 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      color: #2b6cb0;
+      font-size: 10.5pt;
+    }
+
+    .box-dica {
+      background-color: #f0fff4;
+      border-left: 5px solid #38a169;
+      padding: 10px 14px;
+      margin: 14px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-dica h4 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      color: #276749;
+      font-size: 10.5pt;
+    }
+
+    .box-conceito {
+      background-color: #faf5ff;
+      border-left: 5px solid #805ad5;
+      padding: 10px 14px;
+      margin: 14px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-conceito h4 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      color: #6b46c1;
+      font-size: 10.5pt;
+    }
+
+    code {
+      font-family: "Consolas", "Courier New", Courier, monospace;
+      background-color: #edf2f7;
+      color: #c53030;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 9.5pt;
+    }
+
+    pre {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-family: "Consolas", monospace;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      margin: 10px 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      page-break-inside: avoid;
+    }
+
+    .kwd { color: #569cd6; font-weight: bold; }
+    .com { color: #6a9955; font-style: italic; }
+    .str { color: #ce9178; }
+    .num { color: #b5cea8; }
+    .cls { color: #4ec9b0; }
+    .fnc { color: #dcdcaa; }
+    .slf { color: #9cdcfe; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e0;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 9pt;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #edf2f7;
+      color: #2d3748;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .tabela-explicacao td:first-child {
+      font-family: "Consolas", monospace;
+      font-weight: bold;
+      color: #2b6cb0;
+      width: 14%;
+      white-space: nowrap;
+    }
+
+    .tabela-explicacao td:nth-child(2) {
+      font-family: "Consolas", monospace;
+      background-color: #f1f5f9;
+      width: 36%;
+      font-size: 8.5pt;
+      color: #0f172a;
+    }
+
+    .tabela-explicacao td:nth-child(3) {
+      width: 50%;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .diagrama-container {
+      text-align: center;
+      margin: 16px 0;
+      padding: 10px;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      page-break-inside: avoid;
+    }
+
+    .rodape-pagina {
+      font-size: 8.5pt;
+      color: #a0aec0;
+      text-align: center;
+      margin-top: 25px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <div class="capa">
+    <div style="font-size: 11pt; text-transform: uppercase; letter-spacing: 2px; color: #718096; margin-bottom: 10px;">
+      Material Didático de Estudo Autônomo • Passo a Passo
+    </div>
+    <h1>DISSECANDO O CÓDIGO: ARQUITETURA MVC COM FLET E SUPABASE</h1>
+    <div class="subtitulo">
+      Explicação Minuciosa, Linha por Linha, de Cada Arquivo do Sistema
+    </div>
+
+    <div style="margin: 18px auto; width: 60px; height: 3px; background-color: #3182ce;"></div>
+
+    <p style="text-align: center; max-width: 580px; margin: 0 auto; color: #4a5568; font-size: 10pt;">
+      Este material foi escrito para você que quer entender exatamente o que cada palavra e comando do Python está fazendo por trás dos panos.
+      Sem atalhos e sem mistérios: cada arquivo é apresentado com o código original numerado, seguido por uma tabela que explica linha por linha e caixas com os conceitos básicos essenciais de POO.
+    </p>
+
+    <div class="meta-info">
+      <strong>Disciplina:</strong> Linguagens de Programação<br>
+      <strong>Curso:</strong> Técnico em Informática Integrado ao Ensino Médio<br>
+      <strong>Projeto:</strong> <code>08_tarefas_mvc_supabase/</code><br>
+      <strong>Estrutura:</strong> <code>database/</code> • <code>models/</code> • <code>views/</code> • <code>controllers/</code> • <code>main.py</code>
+    </div>
+  </div>
+
+  <!-- CAPÍTULO 1: O DIAGRAMA DE CLASSES E VISÃO GERAL -->
+  <h2>1. Visão Geral da Arquitetura e Diagrama de Classes UML</h2>
+  <p>
+    Para que um software funcione como uma orquestra afinada, cada arquivo deve ter apenas uma missão. No nosso sistema de tarefas, os arquivos conversam entre si seguindo o padrão <strong>MVC (Model - View - Controller)</strong>.
+  </p>
+  <p>
+    Abaixo está o <strong>Diagrama de Classes (UML)</strong> que resume toda a estrutura de Orientação a Objetos que você vai estudar neste guia:
+  </p>
+
+  <div class="diagrama-container">
+    <svg width="100%" height="420" viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" style="font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;">
+      <!-- Defs para marcadores de seta -->
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#4a5568" />
+        </marker>
+        <marker id="triangle" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="white" stroke="#2b6cb0" stroke-width="1.5" />
+        </marker>
+      </defs>
+
+      <!-- PACOTE: DATABASE / SUPABASE -->
+      <rect x="10" y="15" width="220" height="110" rx="6" fill="#ebf8ff" stroke="#3182ce" stroke-width="1.5"/>
+      <rect x="10" y="15" width="220" height="26" rx="6" fill="#3182ce"/>
+      <text x="120" y="33" fill="white" font-weight="bold" font-size="11" text-anchor="middle">database / connect_supabase</text>
+      <text x="20" y="60" fill="#2d3748" font-size="10">+ connect_supabase(): Client</text>
+      <text x="20" y="80" fill="#2d3748" font-size="10">+ verificar_tabela_tarefas(c)</text>
+      <text x="20" y="102" fill="#718096" font-style="italic" font-size="9.5">Normaliza URL e valida .env</text>
+
+      <!-- PACOTE: MODELS (Tarefa e SQL_Tarefa) -->
+      <!-- Classe Tarefa -->
+      <rect x="10" y="155" width="220" height="150" rx="6" fill="#ffffff" stroke="#2b6cb0" stroke-width="1.5"/>
+      <rect x="10" y="155" width="220" height="26" rx="6" fill="#2b6cb0"/>
+      <text x="120" y="173" fill="white" font-weight="bold" font-size="12" text-anchor="middle">Tarefa (Model Puro)</text>
+      <text x="20" y="196" fill="#2d3748" font-size="10">+ id: int | None</text>
+      <text x="20" y="212" fill="#2d3748" font-size="10">+ nome: str</text>
+      <text x="20" y="228" fill="#2d3748" font-size="10">+ tipo: str | xp: int</text>
+      <text x="20" y="244" fill="#2d3748" font-size="10">+ concluida: bool</text>
+      <line x1="10" y1="252" x2="230" y2="252" stroke="#cbd5e0" stroke-width="1"/>
+      <text x="20" y="270" fill="#2d3748" font-size="10">+ alternar_conclusao()</text>
+      <text x="20" y="286" fill="#2d3748" font-size="10">+ para_dicionario(): dict</text>
+      <text x="20" y="300" fill="#2d3748" font-size="9.5">+ de_dicionario(d): Tarefa</text>
+
+      <!-- Classe SQL_Tarefa -->
+      <rect x="10" y="325" width="220" height="85" rx="6" fill="#ffffff" stroke="#2b6cb0" stroke-width="1.5"/>
+      <rect x="10" y="325" width="220" height="24" rx="6" fill="#2b6cb0"/>
+      <text x="120" y="342" fill="white" font-weight="bold" font-size="11.5" text-anchor="middle">SQL_Tarefa (CRUD)</text>
+      <text x="20" y="364" fill="#2d3748" font-size="9.5">+ listar_todas(): list[Tarefa]</text>
+      <text x="20" y="380" fill="#2d3748" font-size="9.5">+ inserir(tarefa) | excluir(id)</text>
+      <text x="20" y="396" fill="#2d3748" font-size="9.5">+ atualizar_status(id, status)</text>
+
+      <!-- PACOTE: CONTROLLER -->
+      <rect x="270" y="155" width="220" height="185" rx="6" fill="#ffffff" stroke="#d69e2e" stroke-width="2"/>
+      <rect x="270" y="155" width="220" height="26" rx="6" fill="#d69e2e"/>
+      <text x="380" y="173" fill="white" font-weight="bold" font-size="12" text-anchor="middle">ControleTarefa (Controller)</text>
+      <text x="280" y="196" fill="#2d3748" font-size="10">+ sql: SQL_Tarefa</text>
+      <text x="280" y="212" fill="#2d3748" font-size="10">+ coluna_tarefas: ft.Column</text>
+      <text x="280" y="228" fill="#2d3748" font-size="10">+ texto_xp: ft.Text</text>
+      <text x="280" y="244" fill="#2d3748" font-size="10">+ xp_total: int</text>
+      <line x1="270" y1="252" x2="490" y2="252" stroke="#cbd5e0" stroke-width="1"/>
+      <text x="280" y="270" fill="#2d3748" font-size="10">+ carregar_tarefas_iniciais()</text>
+      <text x="280" y="286" fill="#2d3748" font-size="10">+ adicionar_nova_tarefa(n, t)</text>
+      <text x="280" y="302" fill="#2d3748" font-size="10">+ alternar_conclusao_tarefa()</text>
+      <text x="280" y="318" fill="#2d3748" font-size="10">+ remover_tarefa(t, card)</text>
+      <text x="280" y="333" fill="#2d3748" font-size="9.5">+ mostrar_mensagem_erro()</text>
+
+      <!-- PACOTE: VIEW (TarefaCard e Subclasses com Herança) -->
+      <!-- Superclasse TarefaCard -->
+      <rect x="530" y="45" width="220" height="145" rx="6" fill="#ffffff" stroke="#38a169" stroke-width="1.5"/>
+      <rect x="530" y="45" width="220" height="26" rx="6" fill="#38a169"/>
+      <text x="640" y="63" fill="white" font-weight="bold" font-size="11.5" text-anchor="middle">TarefaCard (ft.Container)</text>
+      <text x="540" y="86" fill="#2d3748" font-size="10">+ tarefa: Tarefa</text>
+      <text x="540" y="102" fill="#2d3748" font-size="10">+ cor_fundo: str</text>
+      <text x="540" y="118" fill="#2d3748" font-size="10">+ icone: ft.Icons</text>
+      <line x1="530" y1="126" x2="750" y2="126" stroke="#cbd5e0" stroke-width="1"/>
+      <text x="540" y="144" fill="#2d3748" font-size="10">+ construir_layout()</text>
+      <text x="540" y="160" fill="#2d3748" font-size="10">+ ao_mudar_checkbox(e)</text>
+      <text x="540" y="176" fill="#2d3748" font-size="10">+ ao_clicar_excluir(e)</text>
+
+      <!-- Subclasses Filhas -->
+      <rect x="530" y="240" width="220" height="150" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="1.2"/>
+      <text x="640" y="258" fill="#276749" font-weight="bold" font-size="11" text-anchor="middle">Subclasses Visuais (Herança)</text>
+      <line x1="540" y1="266" x2="740" y2="266" stroke="#c6f6d5" stroke-width="1"/>
+      <text x="540" y="286" fill="#2d3748" font-size="10">🔹 <strong>TarefaComumCard</strong> (Azul, +10 XP)</text>
+      <text x="540" y="310" fill="#2d3748" font-size="10">🔹 <strong>TarefaUrgenteCard</strong> (Vermelho, +20 XP)</text>
+      <text x="540" y="334" fill="#2d3748" font-size="10">🔹 <strong>TarefaEpicaCard</strong> (Dourado, +50 XP)</text>
+      <line x1="540" y1="346" x2="740" y2="346" stroke="#c6f6d5" stroke-width="1"/>
+      <text x="540" y="365" fill="#4a5568" font-size="9.5">+ criar_card_tarefa(t, on_alt, on_rem)</text>
+      <text x="540" y="380" fill="#718096" font-style="italic" font-size="9">Instancia a subclasse conforme o tipo</text>
+
+      <!-- SETAS DE RELACIONAMENTO E HERANÇA -->
+      <!-- Herança: Subclasses -> TarefaCard -->
+      <line x1="640" y1="240" x2="640" y2="198" stroke="#2b6cb0" stroke-width="1.5" marker-end="url(#triangle)"/>
+
+      <!-- Associação: Controller -> SQL_Tarefa -->
+      <line x1="270" y1="280" x2="230" y2="340" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Associação: Controller -> View (TarefaCard) -->
+      <line x1="490" y1="200" x2="530" y2="150" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Uso de Tarefa por SQL e View -->
+      <line x1="120" y1="325" x2="120" y2="305" stroke="#718096" stroke-width="1" stroke-dasharray="3,3"/>
+    </svg>
+    <div style="font-size: 8.5pt; color: #718096; margin-top: 4px;">
+      Diagrama UML: Relações entre o Model (dados e SQL), o Controller (regras de negócio) e a View com Herança.
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- CAPÍTULO 2: DATABASE -->
+  <h2>2. A Camada de Conexão: Pasta <code>database/</code></h2>
+  <p>
+    Esta camada é a primeira a ser executada no sistema. Sua função é ler o arquivo de segredos <code>.env</code>, garantir que a URL e a chave existem e entregar um objeto cliente pronto para executar consultas no Supabase.
+  </p>
+
+  <h3>2.1 O Código do Arquivo: <code>database/connect_supabase.py</code></h3>
+  <pre><code> 1: <span class="kwd">import</span> os
+ 2: <span class="kwd">from</span> dotenv <span class="kwd">import</span> load_dotenv
+ 3: <span class="kwd">from</span> supabase <span class="kwd">import</span> create_client, Client
+ 4: 
+ 5: 
+ 6: <span class="kwd">def</span> <span class="fnc">connect_supabase</span>() -> Client:
+ 7:     load_dotenv()
+ 8:     url = os.getenv(<span class="str">"SUPABASE_URL"</span>)
+ 9:     key = os.getenv(<span class="str">"SUPABASE_KEY"</span>)
+10: 
+11:     <span class="kwd">if not</span> url <span class="kwd">or not</span> key <span class="kwd">or</span> <span class="str">"seu-projeto"</span> <span class="kwd">in</span> url <span class="kwd">or</span> <span class="str">"sua-chave"</span> <span class="kwd">in</span> key:
+12:         <span class="kwd">raise</span> <span class="cls">ValueError</span>(
+13:             <span class="str">"Configuração do Supabase ausente ou inválida no arquivo .env.\n"</span>
+14:             <span class="str">"Preencha SUPABASE_URL e SUPABASE_KEY corretamente."</span>
+15:         )
+16: 
+17:     url = url.strip()
+18:     <span class="kwd">if</span> url.endswith(<span class="str">"/rest/v1/"</span>):
+19:         url = url[:-9]
+20:     <span class="kwd">elif</span> url.endswith(<span class="str">"/rest/v1"</span>):
+21:         url = url[:-8]
+22:     <span class="kwd">elif</span> url.endswith(<span class="str">"/"</span>):
+23:         url = url[:-1]
+24: 
+25:     key = key.strip()
+26:     <span class="kwd">return</span> create_client(url, key)
+27: 
+28: 
+29: <span class="kwd">def</span> <span class="fnc">verificar_tabela_tarefas</span>(cliente: Client) -> bool:
+30:     <span class="kwd">try</span>:
+31:         resposta = cliente.table(<span class="str">"tarefas"</span>).select(<span class="str">"id"</span>).limit(<span class="num">1</span>).execute()
+32:         <span class="kwd">return</span> <span class="kwd">True</span>
+33:     <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+34:         <span class="kwd">raise</span> <span class="cls">RuntimeError</span>(
+35:             <span class="str">"Não foi possível acessar a tabela 'tarefas' no Supabase.\n"</span>
+36:             <span class="str">"Verifique se você executou o script 'database/schema.sql' no SQL Editor do Supabase.\n"</span>
+37:             f<span class="str">"Detalhe do erro: {erro}"</span>
+38:         )</code></pre>
+
+  <h3>2.2 Explicação Linha por Linha de <code>database/connect_supabase.py</code></h3>
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Linhas</th>
+        <th>Código Python</th>
+        <th>O que faz e por que existe?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1-3</td>
+        <td><code>import os<br>from dotenv import load_dotenv<br>from supabase import create_client, Client</code></td>
+        <td>Importa o módulo nativo <code>os</code> (para ler variáveis do sistema operacional), a função <code>load_dotenv</code> (que abre o arquivo <code>.env</code>) e a ferramenta oficial do Supabase para criar a conexão.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><code>def connect_supabase() -> Client:</code></td>
+        <td>Declara a função de conexão. A indicação <code>-&gt; Client</code> é um lembrete visual informando que essa função devolverá um cliente conectado.</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><code>load_dotenv()</code></td>
+        <td>Lê o arquivo de texto <code>.env</code> localizado na mesma pasta do projeto e carrega suas linhas na memória do computador.</td>
+      </tr>
+      <tr>
+        <td>8-9</td>
+        <td><code>url = os.getenv("SUPABASE_URL")<br>key = os.getenv("SUPABASE_KEY")</code></td>
+        <td>Pega o valor que você escreveu na frente de <code>SUPABASE_URL=</code> e <code>SUPABASE_KEY=</code> no arquivo <code>.env</code>.</td>
+      </tr>
+      <tr>
+        <td>11-15</td>
+        <td><code>if not url or not key ...:<br>    raise ValueError(...)</code></td>
+        <td><strong>Validação de Segurança:</strong> Se o aluno esqueceu de preencher o <code>.env</code> ou deixou os textos de exemplo, o programa gera um erro intencional (<code>raise ValueError</code>) com uma mensagem em português em vez de falhar silenciosamente.</td>
+      </tr>
+      <tr>
+        <td>17-23</td>
+        <td><code>url = url.strip()<br>if url.endswith("/rest/v1/"): ...</code></td>
+        <td><strong>Limpeza Automática:</strong> Remove espaços em branco das pontas. Se o aluno copiou a URL com <code>/rest/v1/</code> do painel do Supabase, o Python remove os últimos caracteres para manter apenas a URL raiz.</td>
+      </tr>
+      <tr>
+        <td>25-26</td>
+        <td><code>key = key.strip()<br>return create_client(url, key)</code></td>
+        <td>Limpa espaços da chave e inicializa o cliente oficial do Supabase, devolvendo o objeto pronto para uso.</td>
+      </tr>
+      <tr>
+        <td>29</td>
+        <td><code>def verificar_tabela_tarefas(cliente: Client) -> bool:</code></td>
+        <td>Função que faz um "teste de fumaça" para ver se o aluno já executou o script SQL no painel do Supabase.</td>
+      </tr>
+      <tr>
+        <td>30-32</td>
+        <td><code>try:<br>    cliente.table("tarefas").select("id").limit(1).execute()<br>    return True</code></td>
+        <td>Tenta buscar apenas 1 registro da tabela <code>tarefas</code>. Se conseguir, significa que o banco está online e a tabela existe.</td>
+      </tr>
+      <tr>
+        <td>33-38</td>
+        <td><code>except Exception as erro:<br>    raise RuntimeError(...)</code></td>
+        <td>Se a tabela não existir ou a chave estiver bloqueada, captura o erro e avisa o aluno com uma orientação clara sobre o <code>schema.sql</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box-conceito">
+    <h4>🧠 Conceito Básico: O que é <code>raise</code>?</h4>
+    Em Python, a palavra <code>raise</code> serve para <strong>lançar um alerta de erro voluntário</strong>. É como um árbitro de futebol apitando uma falta quando alguém comete uma irregularidade (por exemplo, deixar o arquivo de credenciais vazio).
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- NOVO CAPÍTULO DEDICADO: TRY / EXCEPT DESCOMPLICADO -->
+  <h2>2.3 Primeiro Contato com Exceções: O que é <code>try / except</code> e por que ele é vital?</h2>
+
+  <p>
+    Até agora, você estava acostumado a programar com variáveis locais e operações matemáticas. Quando algo dava errado no seu código — como tentar dividir um número por zero ou tentar acessar um índice que não existe em uma lista —, o Python interrompia a execução imediatamente e exibia aquele bloco gigante de texto vermelho no terminal chamado <strong>Traceback (Error)</strong>.
+  </p>
+  <p>
+    No mundo real, quando conectamos nossos aplicativos a serviços externos como o <strong>Banco de Dados Supabase na Nuvem</strong>, nós <strong>NÃO</strong> podemos deixar o aplicativo simplesmente fechar na cara do usuário se a internet oscilar ou se uma senha estiver errada!
+  </p>
+  <p>
+    É para isso que existe o mecanismo de <strong>Tratamento de Exceções</strong> com as palavras mágicas <strong><code>try</code></strong> e <strong><code>except</code></strong>.
+  </p>
+
+  <div class="box-destaque">
+    <h4>🎪 A Analogia do Trapezista e a Rede de Proteção:</h4>
+    <ul>
+      <li><strong>O bloco <code>try</code> (Tentar):</strong> É o trapezista fazendo sua apresentação no ar. Você coloca dentro do <code>try</code> todas as linhas de código que você quer que o computador execute, mas que <em>sabemos que têm risco de falhar</em> (por exemplo: chamar a internet, salvar no banco, ler um arquivo do disco).</li>
+      <li><strong>A Exceção (O escorregão):</strong> Se alguma linha dentro do <code>try</code> falhar por qualquer motivo imprevisto, o Python <strong>não deixa o programa quebrar</strong>. O erro é "lançado" no ar.</li>
+      <li><strong>O bloco <code>except</code> (A rede de segurança):</strong> É a rede de proteção que apara o trapezista! Em vez do programa fechar bruscamente, o fluxo de execução salta diretamente para dentro do <code>except</code>, permitindo que você capture a mensagem de erro e tome uma atitude elegante (como exibir uma mensagem amigável na tela do Flet).</li>
+    </ul>
+  </div>
+
+  <h3>A Anatomia do Código: Como funciona na prática?</h3>
+  <pre><code><span class="kwd">try</span>:
+    <span class="com"># 1. O Python TENTA executar este bloco arriscado:</span>
+    cliente = connect_supabase()
+    resposta = cliente.table(<span class="str">"tarefas"</span>).select(<span class="str">"*"</span>).execute()
+    print(<span class="str">"Deu tudo certo! Dados carregados."</span>)
+
+<span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+    <span class="com"># 2. Se qualquer erro acontecer lá em cima, o Python pula IMEDIATAMENTE para cá:</span>
+    print(f<span class="str">"Ops! Aconteceu um problema: {erro}"</span>)
+    <span class="com"># O programa continua vivo e você pode avisar o usuário na tela!</span></code></pre>
+
+  <h3>Entendendo Cada Peça do Tratamento de Erros:</h3>
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Comando</th>
+        <th>Para que serve?</th>
+        <th>Exemplo de Situação Real</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>try:</code></td>
+        <td>Abre o bloco protegido. Diz ao Python: <em>"Tente rodar essas linhas com atenção redobrada."</em></td>
+        <td>Tentar abrir conexão com a URL do Supabase pela internet.</td>
+      </tr>
+      <tr>
+        <td><code>except:</code></td>
+        <td>Define o que fazer caso ocorra uma falha dentro do bloco <code>try</code>.</td>
+        <td>Evitar que a janela do Flet feche do nada se o computador estiver offline.</td>
+      </tr>
+      <tr>
+        <td><code>Exception as erro</code></td>
+        <td><code>Exception</code> é a classe mãe de todos os erros do Python. A palavra <code>as erro</code> cria uma variável temporária chamada <code>erro</code> que guarda a mensagem exata do que deu errado.</td>
+        <td>Descobrir se o erro foi "Senha incorreta", "Tabela não encontrada" ou "Timeout de conexão".</td>
+      </tr>
+      <tr>
+        <td><code>raise erro</code></td>
+        <td>Repassa o erro para frente caso você queira que outra camada (por exemplo, o Controller ou a View) fique sabendo do problema.</td>
+        <td>O Model tenta salvar, dá erro de rede e ele avisa o Controller para pintar a tela de vermelho.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box-dica">
+    <h4>💡 Resumo para Lembrar Sempre:</h4>
+    O <code>try / except</code> não conserta a internet caída nem corrige uma senha digitada errada pelo aluno, mas ele <strong>salva o programa de um travamento fatal</strong>, dando a chance de explicar com calma na tela o que aconteceu e como resolver!
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- CAPÍTULO 3: MODELS -->
+  <h2>3. A Camada de Dados: Pasta <code>models/</code></h2>
+  <p>
+    A camada <strong>Model</strong> cuida exclusivamente das informações. Ela é dividida em dois arquivos: 
+    <code>model_tarefa.py</code> (a classe pura da entidade Tarefa) e 
+    <code>sql_tarefa.py</code> (a classe que sabe falar com o banco e executar o CRUD).
+  </p>
+
+  <h3>3.1 O Código do Arquivo: <code>models/model_tarefa.py</code></h3>
+  <pre><code> 1: <span class="kwd">class</span> <span class="cls">Tarefa</span>:
+ 2:     <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, nome: str, tipo: str = <span class="str">"Comum"</span>, xp: int = <span class="num">10</span>, concluida: bool = <span class="kwd">False</span>, id_tarefa: int = <span class="kwd">None</span>):
+ 3:         <span class="slf">self</span>.id = id_tarefa
+ 4:         <span class="slf">self</span>.nome = nome
+ 5:         <span class="slf">self</span>.tipo = tipo
+ 6:         <span class="slf">self</span>.xp = xp
+ 7:         <span class="slf">self</span>.concluida = concluida
+ 8: 
+ 9:     <span class="kwd">def</span> <span class="fnc">alternar_conclusao</span>(<span class="slf">self</span>):
+10:         <span class="kwd">if</span> <span class="slf">self</span>.concluida:
+11:             <span class="slf">self</span>.concluida = <span class="kwd">False</span>
+12:         <span class="kwd">else</span>:
+13:             <span class="slf">self</span>.concluida = <span class="kwd">True</span>
+14: 
+15:     <span class="kwd">def</span> <span class="fnc">para_dicionario</span>(<span class="slf">self</span>):
+16:         dados = {
+17:             <span class="str">"nome"</span>: <span class="slf">self</span>.nome,
+18:             <span class="str">"tipo"</span>: <span class="slf">self</span>.tipo,
+19:             <span class="str">"xp"</span>: <span class="slf">self</span>.xp,
+20:             <span class="str">"concluida"</span>: <span class="slf">self</span>.concluida,
+21:         }
+22:         <span class="kwd">if</span> <span class="slf">self</span>.id <span class="kwd">is not None</span>:
+23:             dados[<span class="str">"id"</span>] = <span class="slf">self</span>.id
+24:         <span class="kwd">return</span> dados
+25: 
+26:     @staticmethod
+27:     <span class="kwd">def</span> <span class="fnc">de_dicionario</span>(dados: dict):
+28:         <span class="kwd">return</span> Tarefa(
+29:             id_tarefa=dados.get(<span class="str">"id"</span>),
+30:             nome=dados.get(<span class="str">"nome"</span>, <span class="str">""</span>),
+31:             tipo=dados.get(<span class="str">"tipo"</span>, <span class="str">"Comum"</span>),
+32:             xp=dados.get(<span class="str">"xp"</span>, <span class="num">10</span>),
+33:             concluida=dados.get(<span class="str">"concluida"</span>, <span class="kwd">False</span>),
+34:         )</code></pre>
+
+  <h3>3.2 Explicação Linha por Linha de <code>models/model_tarefa.py</code></h3>
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Linhas</th>
+        <th>Código Python</th>
+        <th>O que faz e por que existe?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><code>class Tarefa:</code></td>
+        <td>Cria o molde (planta baixa) que define o que uma tarefa tem no nosso software. Repare que não depende de tela nem de banco.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><code>def __init__(self, nome, tipo="Comum", ...):</code></td>
+        <td>O <strong>método construtor</strong>. É executado toda vez que criamos uma nova tarefa no código. Já possui valores padrão (default) para tipo (<code>"Comum"</code>) e xp (<code>10</code>).</td>
+      </tr>
+      <tr>
+        <td>3-7</td>
+        <td><code>self.id = id_tarefa<br>self.nome = nome<br>...</code></td>
+        <td>Guarda cada informação dentro do objeto usando <code>self.</code>. Quando temos 10 tarefas na tela, cada uma tem seu próprio <code>self.nome</code> e seu próprio <code>self.xp</code>.</td>
+      </tr>
+      <tr>
+        <td>9-13</td>
+        <td><code>def alternar_conclusao(self):</code></td>
+        <td>Método que inverte o status: se a tarefa estava concluída (<code>True</code>), vira pendente (<code>False</code>) e vice-versa.</td>
+      </tr>
+      <tr>
+        <td>15-24</td>
+        <td><code>def para_dicionario(self):</code></td>
+        <td>Converte o objeto Python em um dicionário de chaves e valores. Isso é fundamental porque o banco Supabase exige que os dados sejam enviados no formato JSON/Dicionário.</td>
+      </tr>
+      <tr>
+        <td>26-34</td>
+        <td><code>@staticmethod<br>def de_dicionario(dados: dict):</code></td>
+        <td><strong>Método Fábrica:</strong> Quando o banco Supabase nos devolve uma linha, ela chega em forma de dicionário. Esta função pega esses dados e monta um objeto <code>Tarefa</code> novo em folha!</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box-conceito">
+    <h4>🧠 Conceito Básico: O que é <code>@staticmethod</code>?</h4>
+    Um método estático é uma função que pertence à classe <code>Tarefa</code>, mas <strong>não precisa de um objeto já existente</strong> para ser chamado. Nós chamamos direto pelo nome da classe: <code>Tarefa.de_dicionario(dados)</code>!
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- APROFUNDAMENTO: SQL PURO VS CLIENTE SUPABASE -->
+  <h2>3.3 Entendendo o Objeto Cliente: Por que usar <code>cliente.table().select()</code> e não SQL Puro?</h2>
+
+  <p>
+    Se você já estudou banco de dados antes (como SQLite ou MySQL tradicional), deve estar acostumado a escrever comandos SQL diretamente em texto dentro de uma string do Python, como por exemplo:
+  </p>
+
+  <pre><code><span class="com"># O jeito tradicional com SQL puro (conectado a um banco local):</span>
+cursor.execute(<span class="str">"SELECT * FROM tarefas WHERE concluida = False ORDER BY id ASC;"</span>)</code></pre>
+
+  <p>
+    Porém, no nosso arquivo <code>sql_tarefa.py</code>, você viu que escrevemos desta forma:
+  </p>
+
+  <pre><code><span class="com"># O jeito moderno com o cliente oficial do Supabase:</span>
+resposta = <span class="slf">self</span>.cliente.table(<span class="slf">self</span>.tabela).select(<span class="str">"*"</span>).order(<span class="str">"id"</span>).execute()</code></pre>
+
+  <p>
+    Essa diferença pode parecer estranha no início, mas ela existe por um motivo muito importante na arquitetura de sistemas modernos na internet!
+  </p>
+
+  <div class="box-conceito">
+    <h4>🌐 O que é o Objeto <code>cliente</code> do Supabase?</h4>
+    <p>
+      O Supabase <strong>não está instalado no seu computador</strong>; ele está hospedado em servidores de nuvem do outro lado do mundo!
+      Por motivos de segurança e desempenho, um banco de dados na nuvem não abre portas diretas de conexão SQL para qualquer aplicativo cliente (isso facilitaria ataques de hackers).
+    </p>
+    <p>
+      Em vez disso, o Supabase se comunica usando a tecnologia da Web: <strong>APIs REST e chamadas HTTP</strong>.
+      O objeto <code>cliente</code> (gerado por <code>create_client(url, key)</code>) é como se fosse um "navegador invisível de altíssima velocidade". Ele pega os comandos que você digita em Python e os transforma em requisições de rede seguras e criptografadas para o servidor.
+    </p>
+  </div>
+
+  <h3>Por que usar essa sintaxe encadeada (Query Builder)?</h3>
+  <p>
+    O estilo <code>cliente.table("tarefas").select("*").order("id").execute()</code> é chamado no mercado de <strong>Query Builder</strong> (Construtor de Consultas Orientado a Objetos). Veja as vantagens:
+  </p>
+
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Comando SQL Puro</th>
+        <th>Equivalente no Cliente Supabase</th>
+        <th>O que acontece por trás dos panos?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>SELECT * FROM tarefas;</code></td>
+        <td><code>cliente.table("tarefas").select("*").execute()</code></td>
+        <td>O cliente faz uma requisição HTTP <strong>GET</strong> para o servidor e já devolve o resultado convertido em dicionários Python dentro de <code>resposta.data</code>!</td>
+      </tr>
+      <tr>
+        <td><code>SELECT * FROM tarefas WHERE id = 5;</code></td>
+        <td><code>cliente.table("tarefas").select("*").eq("id", 5).execute()</code></td>
+        <td>O método <code>.eq("id", 5)</code> significa <em>Equal</em> (igual a 5). Evita erros de digitação e aspas esquecidas na consulta.</td>
+      </tr>
+      <tr>
+        <td><code>INSERT INTO tarefas ... VALUES (...);</code></td>
+        <td><code>cliente.table("tarefas").insert(dados).execute()</code></td>
+        <td>Faz uma requisição HTTP <strong>POST</strong> enviando o dicionário Python diretamente, sem você precisar montar strings com vírgulas e parênteses.</td>
+      </tr>
+      <tr>
+        <td><code>UPDATE tarefas SET concluida = True WHERE id = 2;</code></td>
+        <td><code>cliente.table("tarefas").update({"concluida": True}).eq("id", 2).execute()</code></td>
+        <td>Faz uma requisição HTTP <strong>PATCH</strong> segura alterando apenas os campos informados.</td>
+      </tr>
+      <tr>
+        <td><code>DELETE FROM tarefas WHERE id = 3;</code></td>
+        <td><code>cliente.table("tarefas").delete().eq("id", 3).execute()</code></td>
+        <td>Faz uma requisição HTTP <strong>DELETE</strong> excluindo a linha informada.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box-destaque">
+    <h4>🛡️ A Maior Vantagem: Proteção contra Injeção de SQL (SQL Injection)</h4>
+    <p>
+      Quando você monta comandos SQL concatenando textos (ex: <code>"SELECT * FROM usuarios WHERE nome = '" + texto + "'"</code>), se um usuário mal-intencionado digitar comandos SQL no campo de texto, ele pode apagar o seu banco inteiro!
+    </p>
+    <p>
+      Ao usar o método <code>cliente.table().insert()</code> e <code>.eq()</code>, a biblioteca trata e higieniza todas as entradas automaticamente. É a forma mais segura e recomendada por empresas para conectar interfaces a bancos na nuvem!
+    </p>
+  </div>
+
+  <div class="box-dica">
+    <h4>⚙️ E o que significa o <code>.execute()</code> no final de cada linha?</h4>
+    <p>
+      O cliente do Supabase permite que você vá "montando" a sua consulta em etapas (escolha a tabela, escolha as colunas com <code>.select()</code>, adicione filtros com <code>.eq()</code>, ordene com <code>.order()</code>).
+      A consulta <strong>só viaja pela internet de verdade</strong> quando você coloca o <code>.execute()</code> no final! O <code>.execute()</code> é o botão de "Disparar / Enviar Pedido" da consulta.
+    </p>
+  </div>
+
+  <div class="page-break"></div>
+
+  <h3>3.4 O Código do Arquivo: <code>models/sql_tarefa.py</code></h3>
+  <pre><code> 1: <span class="kwd">from</span> models.model_tarefa <span class="kwd">import</span> Tarefa
+ 2: <span class="kwd">from</span> supabase <span class="kwd">import</span> Client
+ 3: 
+ 4: 
+ 5: <span class="kwd">class</span> <span class="cls">SQL_Tarefa</span>:
+ 6:     <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, cliente_supabase: Client, nome_tabela: str = <span class="str">"tarefas"</span>):
+ 7:         <span class="slf">self</span>.cliente = cliente_supabase
+ 8:         <span class="slf">self</span>.tabela = nome_tabela
+ 9: 
+10:     <span class="kwd">def</span> <span class="fnc">listar_todas</span>(<span class="slf">self</span>):
+11:         <span class="kwd">try</span>:
+12:             resposta = <span class="slf">self</span>.cliente.table(<span class="slf">self</span>.tabela).select(<span class="str">"*"</span>).order(<span class="str">"id"</span>).execute()
+13:             linhas = resposta.data
+14:             lista_objetos = []
+15:             <span class="kwd">for</span> item <span class="kwd">in</span> linhas:
+16:                 tarefa = Tarefa.de_dicionario(item)
+17:                 lista_objetos.append(tarefa)
+18:             <span class="kwd">return</span> lista_objetos
+19:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+20:             print(<span class="str">"Erro ao listar tarefas do banco:"</span>, erro)
+21:             <span class="kwd">raise</span> erro
+22: 
+23:     <span class="kwd">def</span> <span class="fnc">listar_por_id</span>(<span class="slf">self</span>, id_tarefa: int):
+24:         <span class="kwd">try</span>:
+25:             resposta = <span class="slf">self</span>.cliente.table(<span class="slf">self</span>.tabela).select(<span class="str">"*"</span>).eq(<span class="str">"id"</span>, id_tarefa).execute()
+26:             <span class="kwd">if</span> resposta.data <span class="kwd">and</span> len(resposta.data) > <span class="num">0</span>:
+27:                 <span class="kwd">return</span> Tarefa.de_dicionario(resposta.data[<span class="num">0</span>])
+28:             <span class="kwd">return None</span>
+29:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+30:             print(f<span class="str">"Erro ao buscar tarefa id {id_tarefa}:"</span>, erro)
+31:             <span class="kwd">raise</span> erro
+32: 
+33:     <span class="kwd">def</span> <span class="fnc">inserir</span>(<span class="slf">self</span>, tarefa: Tarefa):
+34:         <span class="kwd">try</span>:
+35:             dados = {
+36:                 <span class="str">"nome"</span>: tarefa.nome,
+37:                 <span class="str">"tipo"</span>: tarefa.tipo,
+38:                 <span class="str">"xp"</span>: tarefa.xp,
+39:                 <span class="str">"concluida"</span>: tarefa.concluida,
+40:             }
+41:             resposta = <span class="slf">self</span>.cliente.table(<span class="slf">self</span>.tabela).insert(dados).execute()
+42:             <span class="kwd">if</span> resposta.data <span class="kwd">and</span> len(resposta.data) > <span class="num">0</span>:
+43:                 tarefa.id = resposta.data[<span class="num">0</span>].get(<span class="str">"id"</span>)
+44:             <span class="kwd">return</span> tarefa
+45:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+46:             print(<span class="str">"Erro ao inserir tarefa:"</span>, erro)
+47:             <span class="kwd">raise</span> erro
+48: 
+49:     <span class="kwd">def</span> <span class="fnc">atualizar_status</span>(<span class="slf">self</span>, id_tarefa: int, concluida: bool):
+50:         <span class="kwd">try</span>:
+51:             resposta = <span class="slf">self</span>.cliente.table(<span class="slf">self</span>.tabela).update({<span class="str">"concluida"</span>: concluida}).eq(<span class="str">"id"</span>, id_tarefa).execute()
+52:             <span class="kwd">return</span> resposta.data
+53:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+54:             print(f<span class="str">"Erro ao atualizar status da tarefa id {id_tarefa}:"</span>, erro)
+55:             <span class="kwd">raise</span> erro
+56: 
+57:     <span class="kwd">def</span> <span class="fnc">excluir</span>(<span class="slf">self</span>, id_tarefa: int):
+58:         <span class="kwd">try</span>:
+59:             resposta = <span class="slf">self</span>.cliente.table(<span class="slf">self</span>.tabela).delete().eq(<span class="str">"id"</span>, id_tarefa).execute()
+60:             <span class="kwd">return</span> resposta.data
+61:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+62:             print(f<span class="str">"Erro ao excluir tarefa id {id_tarefa}:"</span>, erro)
+63:             <span class="kwd">raise</span> erro</code></pre>
+
+  <div class="page-break"></div>
+
+  <h3>3.4 Explicação Linha por Linha de <code>models/sql_tarefa.py</code></h3>
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Linhas</th>
+        <th>Código Python</th>
+        <th>O que faz e por que existe?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1-2</td>
+        <td><code>from models.model_tarefa import Tarefa<br>from supabase import Client</code></td>
+        <td>Importa a classe de dados <code>Tarefa</code> para criar os objetos e a tipagem <code>Client</code> do Supabase.</td>
+      </tr>
+      <tr>
+        <td>5-8</td>
+        <td><code>class SQL_Tarefa:<br>    def __init__(self, cliente_supabase, ...):</code></td>
+        <td>Construtor que recebe o cliente conectado e guarda a tabela padrão (<code>"tarefas"</code>) dentro do objeto.</td>
+      </tr>
+      <tr>
+        <td>10-18</td>
+        <td><code>def listar_todas(self):<br>    ...select("*").order("id").execute()</code></td>
+        <td><strong>SELECT COMPLETO:</strong> Consulta todas as linhas do banco em ordem crescente de ID. Percorre cada linha em um <code>for</code> tradicional, transforma em objeto <code>Tarefa</code> e devolve uma lista cheia de objetos prontos!</td>
+      </tr>
+      <tr>
+        <td>23-31</td>
+        <td><code>def listar_por_id(self, id_tarefa):<br>    ...eq("id", id_tarefa)</code></td>
+        <td><strong>SELECT COM WHERE:</strong> O método <code>.eq("id", id_tarefa)</code> equivale ao comando SQL <code>WHERE id = id_tarefa</code>. Se encontrar, retorna a tarefa; senão retorna <code>None</code>.</td>
+      </tr>
+      <tr>
+        <td>33-47</td>
+        <td><code>def inserir(self, tarefa: Tarefa):<br>    ...insert(dados).execute()</code></td>
+        <td><strong>INSERT SQL:</strong> Grava uma nova linha no Supabase. O banco gera automaticamente o número do <code>id</code> e nós atualizamos o objeto Python com <code>tarefa.id = novo_id</code>.</td>
+      </tr>
+      <tr>
+        <td>49-55</td>
+        <td><code>def atualizar_status(self, id_tarefa, concluida):<br>    ...update({"concluida": ...}).eq(...)</code></td>
+        <td><strong>UPDATE SQL:</strong> Altera apenas a coluna de conclusão (<code>True</code> ou <code>False</code>) da linha correspondente ao ID informado.</td>
+      </tr>
+      <tr>
+        <td>57-63</td>
+        <td><code>def excluir(self, id_tarefa: int):<br>    ...delete().eq("id", id_tarefa)</code></td>
+        <td><strong>DELETE SQL:</strong> Apaga permanentemente a linha da tarefa no banco de dados na nuvem.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box-dica">
+    <h4>💡 Por que separar o Model em dois arquivos?</h4>
+    O arquivo <code>model_tarefa.py</code> representa <strong>"o que é"</strong> uma tarefa (seus atributos). Já o arquivo <code>sql_tarefa.py</code> cuida de <strong>"como salvar"</strong> essa tarefa. Se um dia mudarmos de Supabase para MySQL ou SQLite, só precisamos alterar o arquivo SQL; a classe <code>Tarefa</code> continuará 100% idêntica!
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- CAPÍTULO 4: VIEWS -->
+  <h2>4. A Camada Visual com Herança: Pasta <code>views/</code></h2>
+  <p>
+    Na camada <strong>View</strong>, aplicamos toda a beleza da <strong>Herança de Classes</strong> no framework Flet. Criamos a superclasse <code>TarefaCard</code> herdando de <code>ft.Container</code> e três subclasses filhas que especializam as cores e os ícones de acordo com a dificuldade da tarefa.
+  </p>
+
+  <h3>4.1 O Código do Arquivo: <code>views/ft_tarefa.py</code></h3>
+  <pre><code> 1: <span class="kwd">import</span> flet <span class="kwd">as</span> ft
+ 2: <span class="kwd">from</span> models.model_tarefa <span class="kwd">import</span> Tarefa
+ 3: 
+ 4: 
+ 5: <span class="kwd">class</span> <span class="cls">TarefaCard</span>(ft.Container):
+ 6:     <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, tarefa: Tarefa, on_alternar_conclusao, on_remover):
+ 7:         <span class="kwd">super</span>().__init__()
+ 8:         <span class="slf">self</span>.tarefa = tarefa
+ 9:         <span class="slf">self</span>.on_alternar_conclusao = on_alternar_conclusao
+10:         <span class="slf">self</span>.on_remover = on_remover
+11: 
+12:         <span class="slf">self</span>.cor_fundo = <span class="str">"#E3F2FD"</span>
+13:         <span class="slf">self</span>.icone = ft.Icons.TASK_ALT
+14:         <span class="slf">self</span>.rotulo_tipo = <span class="str">"Comum"</span>
+15: 
+16:     <span class="kwd">def</span> <span class="fnc">construir_layout</span>(<span class="slf">self</span>):
+17:         <span class="slf">self</span>.padding = <span class="num">12</span>
+18:         <span class="slf">self</span>.border_radius = <span class="num">8</span>
+19:         <span class="slf">self</span>.bgcolor = <span class="slf">self</span>.cor_fundo
+20: 
+21:         <span class="slf">self</span>.checkbox = ft.Checkbox(value=<span class="slf">self</span>.tarefa.concluida, on_change=<span class="slf">self</span>.ao_mudar_checkbox)
+22: 
+23:         <span class="kwd">if</span> <span class="slf">self</span>.tarefa.concluida:
+24:             estilo_texto = ft.TextStyle(decoration=ft.TextDecoration.LINE_THROUGH)
+25:         <span class="kwd">else</span>:
+26:             estilo_texto = ft.TextStyle(decoration=ft.TextDecoration.NONE)
+27: 
+28:         <span class="slf">self</span>.texto_nome = ft.Text(<span class="slf">self</span>.tarefa.nome, expand=<span class="kwd">True</span>, size=<span class="num">16</span>, style=estilo_texto)
+29: 
+30:         <span class="slf">self</span>.botao_excluir = ft.IconButton(
+31:             icon=ft.Icons.DELETE,
+32:             icon_color=ft.Colors.RED_400,
+33:             on_click=<span class="slf">self</span>.ao_clicar_excluir,
+34:         )
+35: 
+36:         <span class="slf">self</span>.content = ft.Row(
+37:             controls=[
+38:                 ft.Icon(<span class="slf">self</span>.icone),
+39:                 <span class="slf">self</span>.checkbox,
+40:                 <span class="slf">self</span>.texto_nome,
+41:                 ft.Container(
+42:                     content=ft.Text(<span class="slf">self</span>.rotulo_tipo, size=<span class="num">12</span>, weight=ft.FontWeight.W_500),
+43:                     padding=ft.Padding.symmetric(horizontal=<span class="num">8</span>, vertical=<span class="num">4</span>),
+44:                     bgcolor=ft.Colors.WHITE,
+45:                     border_radius=<span class="num">4</span>,
+46:                 ),
+47:                 ft.Text(f<span class="str">"+{self.tarefa.xp} XP"</span>, weight=ft.FontWeight.BOLD),
+48:                 <span class="slf">self</span>.botao_excluir,
+49:             ]
+50:         )
+51: 
+52:     <span class="kwd">def</span> <span class="fnc">ao_mudar_checkbox</span>(<span class="slf">self</span>, evento):
+53:         novo_status = <span class="slf">self</span>.checkbox.value
+54:         <span class="kwd">if</span> novo_status:
+55:             <span class="slf">self</span>.texto_nome.style = ft.TextStyle(decoration=ft.TextDecoration.LINE_THROUGH)
+56:         <span class="kwd">else</span>:
+57:             <span class="slf">self</span>.texto_nome.style = ft.TextStyle(decoration=ft.TextDecoration.NONE)
+58:         <span class="slf">self</span>.update()
+59:         <span class="slf">self</span>.on_alternar_conclusao(<span class="slf">self</span>.tarefa, novo_status)
+60: 
+61:     <span class="kwd">def</span> <span class="fnc">ao_clicar_excluir</span>(<span class="slf">self</span>, evento):
+62:         <span class="slf">self</span>.on_remover(<span class="slf">self</span>.tarefa, <span class="slf">self</span>)
+63: 
+64: 
+65: <span class="kwd">class</span> <span class="cls">TarefaComumCard</span>(TarefaCard):
+66:     <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, tarefa: Tarefa, on_alternar_conclusao, on_remover):
+67:         <span class="kwd">super</span>().__init__(tarefa, on_alternar_conclusao, on_remover)
+68:         <span class="slf">self</span>.cor_fundo = <span class="str">"#E3F2FD"</span>
+69:         <span class="slf">self</span>.icone = ft.Icons.TASK_ALT
+70:         <span class="slf">self</span>.rotulo_tipo = <span class="str">"Comum"</span>
+71:         <span class="slf">self</span>.construir_layout()
+72: 
+73: 
+74: <span class="kwd">class</span> <span class="cls">TarefaUrgenteCard</span>(TarefaCard):
+75:     <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, tarefa: Tarefa, on_alternar_conclusao, on_remover):
+76:         <span class="kwd">super</span>().__init__(tarefa, on_alternar_conclusao, on_remover)
+77:         <span class="slf">self</span>.cor_fundo = <span class="str">"#FFCDD2"</span>
+78:         <span class="slf">self</span>.icone = ft.Icons.WARNING_AMBER
+79:         <span class="slf">self</span>.rotulo_tipo = <span class="str">"Urgente"</span>
+80:         <span class="slf">self</span>.construir_layout()
+81: 
+82: 
+83: <span class="kwd">class</span> <span class="cls">TarefaEpicaCard</span>(TarefaCard):
+84:     <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, tarefa: Tarefa, on_alternar_conclusao, on_remover):
+85:         <span class="kwd">super</span>().__init__(tarefa, on_alternar_conclusao, on_remover)
+86:         <span class="slf">self</span>.cor_fundo = <span class="str">"#FFE082"</span>
+87:         <span class="slf">self</span>.icone = ft.Icons.STAR
+88:         <span class="slf">self</span>.rotulo_tipo = <span class="str">"Épica ⭐"</span>
+89:         <span class="slf">self</span>.construir_layout()
+90: 
+91: 
+92: <span class="kwd">def</span> <span class="fnc">criar_card_tarefa</span>(tarefa: Tarefa, on_alternar_conclusao, on_remover) -> TarefaCard:
+93:     <span class="kwd">if</span> tarefa.tipo == <span class="str">"Urgente"</span>:
+94:         <span class="kwd">return</span> TarefaUrgenteCard(tarefa, on_alternar_conclusao, on_remover)
+95:     <span class="kwd">elif</span> tarefa.tipo == <span class="str">"Épica"</span>:
+96:         <span class="kwd">return</span> TarefaEpicaCard(tarefa, on_alternar_conclusao, on_remover)
+97:     <span class="kwd">else</span>:
+98:         <span class="kwd">return</span> TarefaComumCard(tarefa, on_alternar_conclusao, on_remover)</code></pre>
+
+  <div class="page-break"></div>
+
+  <h3>4.2 Explicação Linha por Linha de <code>views/ft_tarefa.py</code></h3>
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Linhas</th>
+        <th>Código Python</th>
+        <th>O que faz e por que existe?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>5</td>
+        <td><code>class TarefaCard(ft.Container):</code></td>
+        <td><strong>SUPERCLASSE:</strong> Herda de <code>ft.Container</code>. Ganha automaticamente a capacidade de ter borda, cantos arredondados, margens e controles filhos.</td>
+      </tr>
+      <tr>
+        <td>6-7</td>
+        <td><code>def __init__(self, tarefa, on_alt, on_rem):<br>    super().__init__()</code></td>
+        <td>Executa o construtor da mãe (<code>ft.Container</code>) com <code>super().__init__()</code> para ativar a estrutura gráfica do container no Flet.</td>
+      </tr>
+      <tr>
+        <td>8-10</td>
+        <td><code>self.tarefa = tarefa<br>self.on_alternar_conclusao = ...</code></td>
+        <td>Guarda o objeto de dados da tarefa e as duas funções de retorno (callbacks) que avisarão o Controller quando o usuário interagir.</td>
+      </tr>
+      <tr>
+        <td>16-20</td>
+        <td><code>def construir_layout(self):<br>    self.padding = 12 ...</code></td>
+        <td>Método que aplica as configurações estéticas de espaçamento e cor no próprio objeto container (<code>self</code>).</td>
+      </tr>
+      <tr>
+        <td>21-28</td>
+        <td><code>self.checkbox = ft.Checkbox(...)<br>if self.tarefa.concluida: LINE_THROUGH</code></td>
+        <td>Cria o checkbox e verifica: se a tarefa veio do banco já concluída, aplica o traço riscado no meio do texto (<code>LINE_THROUGH</code>).</td>
+      </tr>
+      <tr>
+        <td>36-50</td>
+        <td><code>self.content = ft.Row(controls=[...])</code></td>
+        <td>Agrupa todos os elementos (ícone, checkbox, texto, selo e lixeira) alinhados lado a lado em uma linha horizontal.</td>
+      </tr>
+      <tr>
+        <td>52-60</td>
+        <td><code>def ao_mudar_checkbox(self, evento):<br>    ...self.update()<br>    self.on_alternar_conclusao(...)</code></td>
+        <td>Quando o aluno clica no checkbox, a própria classe risca o texto na tela, chama <code>self.update()</code> e avisa o Controller: <em>"Ei, avise o banco que essa tarefa mudou de status!"</em>.</td>
+      </tr>
+      <tr>
+        <td>61-62</td>
+        <td><code>def ao_clicar_excluir(self, evento):<br>    self.on_remover(self.tarefa, self)</code></td>
+        <td>Chama o callback de exclusão entregando a tarefa e a si mesma (<code>self</code>) para ser removida da tela.</td>
+      </tr>
+      <tr>
+        <td>65-90</td>
+        <td><code>class TarefaComumCard(TarefaCard):<br>class TarefaUrgenteCard(TarefaCard):<br>class TarefaEpicaCard(TarefaCard):</code></td>
+        <td><strong>SUBCLASSES (HERANÇA):</strong> Três classes filhas que herdam tudo de <code>TarefaCard</code> e em apenas 5 linhas de código personalizam sua cor (azul, vermelho ou dourado) e seu ícone correspondente!</td>
+      </tr>
+      <tr>
+        <td>92-98</td>
+        <td><code>def criar_card_tarefa(tarefa, on_alt, on_rem):</code></td>
+        <td>Função inteligente de fábrica que lê o tipo da tarefa e instancia a classe filha correta automaticamente.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- CAPÍTULO 5: CONTROLLERS -->
+  <h2>5. A Camada de Controle: Pasta <code>controllers/</code></h2>
+  <p>
+    O <strong>Controller</strong> é o cérebro que comanda toda a lógica de negócio. A tela (View) não tem permissão para falar diretamente com o banco de dados, e o banco (Model) não sabe desenhar botões. O Controller fica no meio do caminho intermediando tudo com segurança e clareza.
+  </p>
+
+  <h3>5.1 O Código do Arquivo: <code>controllers/controle_tarefa.py</code></h3>
+  <pre><code> 1: <span class="kwd">import</span> flet <span class="kwd">as</span> ft
+ 2: <span class="kwd">from</span> models.model_tarefa <span class="kwd">import</span> Tarefa
+ 3: <span class="kwd">from</span> models.sql_tarefa <span class="kwd">import</span> SQL_Tarefa
+ 4: <span class="kwd">from</span> views.ft_tarefa <span class="kwd">import</span> criar_card_tarefa
+ 5: 
+ 6: 
+ 7: <span class="kwd">class</span> <span class="cls">ControleTarefa</span>:
+ 8:     <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, page: ft.Page, sql_tarefa: SQL_Tarefa, coluna_tarefas: ft.Column, texto_xp: ft.Text):
+ 9:         <span class="slf">self</span>.page = page
+10:         <span class="slf">self</span>.sql = sql_tarefa
+11:         <span class="slf">self</span>.coluna_tarefas = coluna_tarefas
+12:         <span class="slf">self</span>.texto_xp = texto_xp
+13:         <span class="slf">self</span>.xp_total = <span class="num">0</span>
+14: 
+15:     <span class="kwd">def</span> <span class="fnc">carregar_tarefas_iniciais</span>(<span class="slf">self</span>):
+16:         <span class="kwd">try</span>:
+17:             lista_tarefas = <span class="slf">self</span>.sql.listar_todas()
+18:             <span class="slf">self</span>.coluna_tarefas.controls.clear()
+19:             <span class="slf">self</span>.xp_total = <span class="num">0</span>
+20: 
+21:             <span class="kwd">for</span> tarefa <span class="kwd">in</span> lista_tarefas:
+22:                 <span class="kwd">if</span> tarefa.concluida:
+23:                     <span class="slf">self</span>.xp_total += tarefa.xp
+24: 
+25:                 card = criar_card_tarefa(
+26:                     tarefa=tarefa,
+27:                     on_alternar_conclusao=<span class="slf">self</span>.alternar_conclusao_tarefa,
+28:                     on_remover=<span class="slf">self</span>.remover_tarefa,
+29:                 )
+30:                 <span class="slf">self</span>.coluna_tarefas.controls.append(card)
+31: 
+32:             <span class="slf">self</span>.atualizar_placar_xp()
+33:             <span class="slf">self</span>.page.update()
+34:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+35:             <span class="slf">self</span>.mostrar_mensagem_erro(f<span class="str">"Erro ao carregar tarefas do Supabase: {erro}"</span>)
+36: 
+37:     <span class="kwd">def</span> <span class="fnc">adicionar_nova_tarefa</span>(<span class="slf">self</span>, nome: str, tipo: str):
+38:         nome = nome.strip()
+39:         <span class="kwd">if not</span> nome:
+40:             <span class="slf">self</span>.mostrar_mensagem_erro(<span class="str">"O nome da tarefa não pode ficar vazio!"</span>)
+41:             <span class="kwd">return False</span>
+42: 
+43:         <span class="kwd">if</span> tipo == <span class="str">"Urgente"</span>:
+44:             xp = <span class="num">20</span>
+45:         <span class="kwd">elif</span> tipo == <span class="str">"Épica"</span>:
+46:             xp = <span class="num">50</span>
+47:         <span class="kwd">else</span>:
+48:             tipo = <span class="str">"Comum"</span>
+49:             xp = <span class="num">10</span>
+50: 
+51:         <span class="kwd">try</span>:
+52:             nova_tarefa = Tarefa(nome=nome, tipo=tipo, xp=xp, concluida=<span class="kwd">False</span>)
+53:             <span class="slf">self</span>.sql.inserir(nova_tarefa)
+54:             card = criar_card_tarefa(
+55:                 tarefa=nova_tarefa,
+56:                 on_alternar_conclusao=<span class="slf">self</span>.alternar_conclusao_tarefa,
+57:                 on_remover=<span class="slf">self</span>.remover_tarefa,
+58:             )
+59:             <span class="slf">self</span>.coluna_tarefas.controls.append(card)
+60:             <span class="slf">self</span>.page.update()
+61:             <span class="slf">self</span>.mostrar_mensagem_sucesso(f<span class="str">"Tarefa '{nome}' gravada com sucesso no Supabase!"</span>)
+62:             <span class="kwd">return True</span>
+63:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+64:             <span class="slf">self</span>.mostrar_mensagem_erro(f<span class="str">"Falha ao salvar no banco: {erro}"</span>)
+65:             <span class="kwd">return False</span>
+66: 
+67:     <span class="kwd">def</span> <span class="fnc">alternar_conclusao_tarefa</span>(<span class="slf">self</span>, tarefa: Tarefa, novo_status: bool):
+68:         <span class="kwd">try</span>:
+69:             <span class="slf">self</span>.sql.atualizar_status(tarefa.id, novo_status)
+70:             tarefa.concluida = novo_status
+71:             <span class="kwd">if</span> novo_status:
+72:                 <span class="slf">self</span>.xp_total += tarefa.xp
+73:             <span class="kwd">else</span>:
+74:                 <span class="slf">self</span>.xp_total -= tarefa.xp
+75:             <span class="slf">self</span>.atualizar_placar_xp()
+76:             <span class="slf">self</span>.page.update()
+77:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+78:             <span class="slf">self</span>.mostrar_mensagem_erro(f<span class="str">"Erro ao atualizar status no banco: {erro}"</span>)
+79: 
+80:     <span class="kwd">def</span> <span class="fnc">remover_tarefa</span>(<span class="slf">self</span>, tarefa: Tarefa, card_container):
+81:         <span class="kwd">try</span>:
+82:             <span class="slf">self</span>.sql.excluir(tarefa.id)
+83:             <span class="kwd">if</span> tarefa.concluida:
+84:                 <span class="slf">self</span>.xp_total -= tarefa.xp
+85:                 <span class="slf">self</span>.atualizar_placar_xp()
+86:             <span class="slf">self</span>.coluna_tarefas.controls.remove(card_container)
+87:             <span class="slf">self</span>.page.update()
+88:             <span class="slf">self</span>.mostrar_mensagem_sucesso(<span class="str">"Tarefa removida com sucesso!"</span>)
+89:         <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+90:             <span class="slf">self</span>.mostrar_mensagem_erro(f<span class="str">"Erro ao excluir tarefa do banco: {erro}"</span>)
+91: 
+92:     <span class="kwd">def</span> <span class="fnc">atualizar_placar_xp</span>(<span class="slf">self</span>):
+93:         <span class="slf">self</span>.texto_xp.value = f<span class="str">"XP Total: {self.xp_total}"</span>
+94: 
+95:     <span class="kwd">def</span> <span class="fnc">mostrar_mensagem_erro</span>(<span class="slf">self</span>, texto: str):
+96:         snackbar = ft.SnackBar(content=ft.Text(texto, color=ft.Colors.WHITE), bgcolor=ft.Colors.RED_600)
+97:         <span class="slf">self</span>.page.overlay.append(snackbar)
+98:         snackbar.open = <span class="kwd">True</span>
+99:         <span class="slf">self</span>.page.update()
+100: 
+101:     <span class="kwd">def</span> <span class="fnc">mostrar_mensagem_sucesso</span>(<span class="slf">self</span>, texto: str):
+102:         snackbar = ft.SnackBar(content=ft.Text(texto, color=ft.Colors.WHITE), bgcolor=ft.Colors.GREEN_700)
+103:         <span class="slf">self</span>.page.overlay.append(snackbar)
+104:         snackbar.open = <span class="kwd">True</span>
+105:         <span class="slf">self</span>.page.update()</code></pre>
+
+  <div class="page-break"></div>
+
+  <h3>5.2 Explicação Linha por Linha de <code>controllers/controle_tarefa.py</code></h3>
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Linhas</th>
+        <th>Código Python</th>
+        <th>O que faz e por que existe?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>8-13</td>
+        <td><code>def __init__(self, page, sql_tarefa, ...):</code></td>
+        <td>O construtor recebe as referências essenciais: a página, o objeto de banco <code>SQL_Tarefa</code>, a coluna da lista e o texto do placar de XP.</td>
+      </tr>
+      <tr>
+        <td>15-36</td>
+        <td><code>def carregar_tarefas_iniciais(self):<br>    for tarefa in lista_tarefas: ...</code></td>
+        <td><strong>Carga Inicial da Nuvem:</strong> Busca todas as tarefas gravadas no Supabase. Para cada uma, calcula o XP (se estiver concluída) e cria o card visual com a subclasse certa, inserindo na coluna da tela.</td>
+      </tr>
+      <tr>
+        <td>37-41</td>
+        <td><code>def adicionar_nova_tarefa(self, nome, tipo):<br>    if not nome: return False</code></td>
+        <td><strong>Validação de Regra de Negócio:</strong> Impede o cadastro de tarefas em branco e exibe um alerta vermelho com SnackBar se o campo estiver vazio.</td>
+      </tr>
+      <tr>
+        <td>43-50</td>
+        <td><code>if tipo == "Urgente": xp = 20 ...</code></td>
+        <td>Aplica as regras de pontuação do jogo (+10, +20 ou +50 XP) com base na categoria escolhida.</td>
+      </tr>
+      <tr>
+        <td>52-62</td>
+        <td><code>nova_tarefa = Tarefa(...)<br>self.sql.inserir(nova_tarefa)<br>card = criar_card_tarefa(...)</code></td>
+        <td><strong>O Fluxo MVC Completo:</strong> 1) Cria o Model; 2) Grava no Supabase via SQL; 3) Cria a View com a subclasse correta; 4) Adiciona na tela e avisa o usuário com mensagem verde de sucesso!</td>
+      </tr>
+      <tr>
+        <td>67-79</td>
+        <td><code>def alternar_conclusao_tarefa(self, tarefa, status):</code></td>
+        <td>Atualiza o status no Supabase com <code>self.sql.atualizar_status</code>, soma ou subtrai o XP acumulado e redesenha o placar.</td>
+      </tr>
+      <tr>
+        <td>80-91</td>
+        <td><code>def remover_tarefa(self, tarefa, card):</code></td>
+        <td>Chama <code>self.sql.excluir(tarefa.id)</code> para apagar do banco e remove o card da lista com <code>self.coluna_tarefas.controls.remove(card)</code>.</td>
+      </tr>
+      <tr>
+        <td>95-105</td>
+        <td><code>def mostrar_mensagem_erro(self, texto):<br>def mostrar_mensagem_sucesso(self, texto):</code></td>
+        <td>Cria balões modernos de notificação na base da tela (<code>ft.SnackBar</code>) em verde (sucesso) ou vermelho (erro) para manter o usuário sempre informado.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- CAPÍTULO 6: MAIN.PY -->
+  <h2>6. O Ponto de Entrada: Arquivo <code>main.py</code></h2>
+  <p>
+    O arquivo <code>main.py</code> é a porta de entrada da nossa aplicação. Sua única missão é:
+    1) Testar a conexão com o Supabase;
+    2) Desenhar o layout da página inicial;
+    3) Instanciar o Controller e conectar o botão "Adicionar".
+  </p>
+
+  <h3>6.1 O Código do Arquivo: <code>main.py</code></h3>
+  <pre><code> 1: <span class="kwd">import</span> flet <span class="kwd">as</span> ft
+ 2: <span class="kwd">from</span> database.connect_supabase <span class="kwd">import</span> connect_supabase, verificar_tabela_tarefas
+ 3: <span class="kwd">from</span> models.sql_tarefa <span class="kwd">import</span> SQL_Tarefa
+ 4: <span class="kwd">from</span> controllers.controle_tarefa <span class="kwd">import</span> ControleTarefa
+ 5: 
+ 6: 
+ 7: <span class="kwd">def</span> <span class="fnc">exibir_tela_erro_configuracao</span>(page: ft.Page, mensagem_erro: str):
+ 8:     <span class="kwd">def</span> <span class="fnc">ao_clicar_tentar_novamente</span>(evento):
+ 9:         main(page)
+10: 
+11:     page.clean()
+12:     page.add(
+13:         ft.Container(
+14:             padding=<span class="num">30</span>,
+15:             content=ft.Column(
+16:                 controls=[
+17:                     ft.Icon(ft.Icons.CLOUD_OFF, size=<span class="num">64</span>, color=ft.Colors.RED_500),
+18:                     ft.Text(<span class="str">"Atenção: Conexão com o Supabase Não Estabelecida"</span>, size=<span class="num">24</span>, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_700),
+19:                     ft.Text(<span class="str">"O aplicativo precisa se conectar ao Supabase para carregar e salvar as tarefas."</span>, size=<span class="num">16</span>),
+20:                     ft.Divider(),
+21:                     ft.Text(<span class="str">"Siga o checklist de verificação abaixo:"</span>, size=<span class="num">18</span>, weight=ft.FontWeight.BOLD),
+22:                     ft.Text(<span class="str">"1. Verifique se você criou o arquivo .env a partir do .env.example;"</span>),
+23:                     ft.Text(<span class="str">"2. Preencha SUPABASE_URL e SUPABASE_KEY com as chaves do seu projeto;"</span>),
+24:                     ft.Text(<span class="str">"3. Abra o painel do Supabase, vá em 'SQL Editor' e execute o script 'database/schema.sql';"</span>),
+25:                     ft.Text(<span class="str">"4. Verifique se o seu computador está conectado à internet."</span>),
+26:                     ft.Divider(),
+27:                     ft.Text(<span class="str">"Detalhes técnicos da exceção capturada:"</span>, size=<span class="num">14</span>, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_700),
+28:                     ft.Container(
+29:                         content=ft.Text(str(mensagem_erro), color=ft.Colors.RED_900, font_family=<span class="str">"monospace"</span>, size=<span class="num">13</span>),
+30:                         padding=<span class="num">12</span>,
+31:                         bgcolor=ft.Colors.RED_50,
+32:                         border_radius=<span class="num">6</span>,
+33:                     ),
+34:                     ft.Button(
+35:                         content=<span class="str">"Tentar Novamente"</span>,
+36:                         icon=ft.Icons.REFRESH,
+37:                         on_click=ao_clicar_tentar_novamente,
+38:                     ),
+39:                 ],
+40:                 spacing=<span class="num">12</span>,
+41:             ),
+42:         )
+43:     )
+44:     page.update()
+45: 
+46: 
+47: <span class="kwd">def</span> <span class="fnc">main</span>(page: ft.Page):
+48:     page.title = <span class="str">"Gerenciador de Tarefas Gamificado (MVC + Supabase)"</span>
+49:     page.theme_mode = ft.ThemeMode.LIGHT
+50: 
+51:     <span class="kwd">try</span>:
+52:         cliente_supabase = connect_supabase()
+53:         verificar_tabela_tarefas(cliente_supabase)
+54:     <span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro_conexao:
+55:         exibir_tela_erro_configuracao(page, str(erro_conexao))
+56:         <span class="kwd">return</span>
+57: 
+58:     sql_tarefas = SQL_Tarefa(cliente_supabase)
+59:     page.clean()
+60: 
+61:     texto_xp = ft.Text(<span class="str">"XP Total: 0"</span>, size=<span class="num">24</span>, weight=ft.FontWeight.BOLD, color=ft.Colors.AMBER_900)
+62:     coluna_tarefas = ft.Column(spacing=<span class="num">8</span>)
+63: 
+64:     input_nome = ft.TextField(label=<span class="str">"Nova Tarefa"</span>, expand=<span class="kwd">True</span>)
+65:     dropdown_tipo = ft.Dropdown(
+66:         label=<span class="str">"Dificuldade / Tipo"</span>,
+67:         options=[
+68:             ft.DropdownOption(key=<span class="str">"Comum"</span>, text=<span class="str">"Comum (+10 XP)"</span>),
+69:             ft.DropdownOption(key=<span class="str">"Urgente"</span>, text=<span class="str">"Urgente (+20 XP)"</span>),
+70:             ft.DropdownOption(key=<span class="str">"Épica"</span>, text=<span class="str">"Épica (+50 XP)"</span>),
+71:         ],
+72:         value=<span class="str">"Comum"</span>,
+73:         width=<span class="num">200</span>,
+74:     )
+75: 
+76:     controller = ControleTarefa(
+77:         page=page,
+78:         sql_tarefa=sql_tarefas,
+79:         coluna_tarefas=coluna_tarefas,
+80:         texto_xp=texto_xp,
+81:     )
+82: 
+83:     <span class="kwd">def</span> <span class="fnc">ao_clicar_adicionar</span>(evento):
+84:         nome_digitado = input_nome.value
+85:         tipo_selecionado = dropdown_tipo.value
+86:         sucesso = controller.adicionar_nova_tarefa(nome_digitado, tipo_selecionado)
+87:         <span class="kwd">if</span> sucesso:
+88:             input_nome.value = <span class="str">""</span>
+89:             page.update()
+90: 
+91:     botao_adicionar = ft.Button(content=<span class="str">"Adicionar Tarefa"</span>, on_click=ao_clicar_adicionar)
+92: 
+93:     linha_formulario = ft.Row(controls=[input_nome, dropdown_tipo, botao_adicionar])
+94: 
+95:     page.add(
+96:         ft.Column(
+97:             controls=[
+98:                 ft.Row(controls=[ft.Icon(ft.Icons.CLOUD_DONE, color=ft.Colors.GREEN_600, size=<span class="num">28</span>), ft.Text(<span class="str">"Tarefas com MVC + Supabase"</span>, size=<span class="num">26</span>, weight=ft.FontWeight.BOLD)]),
+99:                 ft.Text(<span class="str">"Dados persistidos diretamente na nuvem (PostgreSQL) com arquitetura MVC."</span>),
+100:                 texto_xp,
+101:                 linha_formulario,
+102:                 ft.Divider(),
+103:                 coluna_tarefas,
+104:             ],
+105:             spacing=<span class="num">15</span>,
+106:         )
+107:     )
+108: 
+109:     controller.carregar_tarefas_iniciais()
+110: 
+111: 
+112: <span class="kwd">if</span> __name__ == <span class="str">"__main__"</span>:
+113:     ft.run(main)</code></pre>
+
+  <div class="page-break"></div>
+
+  <h3>6.2 Explicação Linha por Linha de <code>main.py</code></h3>
+  <table class="tabela-explicacao">
+    <thead>
+      <tr>
+        <th>Linhas</th>
+        <th>Código Python</th>
+        <th>O que faz e por que existe?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1-4</td>
+        <td><code>import flet as ft<br>from database.connect_supabase import ...<br>from controllers.controle_tarefa import ...</code></td>
+        <td>Importa as peças das diferentes pastas: o conector do banco (<code>database</code>), o executor SQL (<code>models</code>) e o controlador (<code>controllers</code>).</td>
+      </tr>
+      <tr>
+        <td>7-44</td>
+        <td><code>def exibir_tela_erro_configuracao(...):</code></td>
+        <td><strong>Tela de Diagnóstico Amigável:</strong> Se faltar o <code>.env</code> ou a internet estiver fora, em vez de fechar a janela com erro, o Flet monta uma tela bonita com um checklist passo a passo e o botão "Tentar Novamente".</td>
+      </tr>
+      <tr>
+        <td>51-56</td>
+        <td><code>try:<br>    cliente_supabase = connect_supabase()<br>    ...<br>except Exception as erro:</code></td>
+        <td><strong>Pré-Voo do Sistema:</strong> Antes de desenhar os botões, testa se o banco está respondendo. Se falhar, chama a tela de erro e dá <code>return</code> interrompendo a inicialização com segurança.</td>
+      </tr>
+      <tr>
+        <td>58</td>
+        <td><code>sql_tarefas = SQL_Tarefa(cliente_supabase)</code></td>
+        <td>Instancia o objeto de banco passando a conexão ativa.</td>
+      </tr>
+      <tr>
+        <td>61-74</td>
+        <td><code>texto_xp = ft.Text(...)<br>coluna_tarefas = ft.Column(...)<br>input_nome = ft.TextField(...)</code></td>
+        <td>Cria os controles visuais básicos da página: o placar de XP, a coluna vazia para as tarefas e os campos de entrada de texto e categoria.</td>
+      </tr>
+      <tr>
+        <td>76-81</td>
+        <td><code>controller = ControleTarefa(page, sql_tarefas, ...)</code></td>
+        <td><strong>Instanciação do Controller:</strong> Entrega a responsabilidade de gerenciar as ações para a classe <code>ControleTarefa</code>.</td>
+      </tr>
+      <tr>
+        <td>83-91</td>
+        <td><code>def ao_clicar_adicionar(evento):<br>    controller.adicionar_nova_tarefa(...)</code></td>
+        <td>Quando o usuário clica em "Adicionar Tarefa", a tela não tenta salvar no banco por conta própria: ela simplesmente chama o método do Controller!</td>
+      </tr>
+      <tr>
+        <td>95-107</td>
+        <td><code>page.add(ft.Column(controls=[...]))</code></td>
+        <td>Posiciona todos os elementos na janela do Flet em uma coluna organizada.</td>
+      </tr>
+      <tr>
+        <td>109</td>
+        <td><code>controller.carregar_tarefas_iniciais()</code></td>
+        <td>Manda o Controller buscar as tarefas existentes no Supabase e desenhá-las na tela assim que o app abre.</td>
+      </tr>
+      <tr>
+        <td>112-113</td>
+        <td><code>if __name__ == "__main__":<br>    ft.run(main)</code></td>
+        <td>Executa a aplicação no motor do Flet.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 7. CONCLUSÃO -->
+  <h2>7. Resumo Final: Como Tudo se Encaixa no Fluxo de Vida</h2>
+  <div class="box-destaque">
+    <h4>🔄 O Ciclo de Uma Ação do Usuário:</h4>
+    <ol>
+      <li>O usuário digita <em>"Estudar para prova"</em> e clica no botão da tela (<strong>main.py / View</strong>).</li>
+      <li>O clique dispara o método <code>controller.adicionar_nova_tarefa()</code> (<strong>Controller</strong>).</li>
+      <li>O Controller valida o texto e cria um objeto <code>Tarefa</code> (<strong>Model</strong>).</li>
+      <li>O Controller manda a classe <code>SQL_Tarefa</code> executar um <code>INSERT</code> no banco (<strong>Supabase na Nuvem</strong>).</li>
+      <li>Com o ID retornado pelo banco, o Controller chama a fábrica <code>criar_card_tarefa()</code> que instancia uma <code>TarefaComumCard</code> com fundo azul e ícone (<strong>View com Herança</strong>).</li>
+      <li>O card é inserido na coluna visual e desenhado na tela para o usuário!</li>
+    </ol>
+  </div>
+
+  <div class="rodape-pagina">
+    Disciplina de Linguagens de Programação • Curso Técnico em Informática • Dissecando o Código MVC + Supabase
+  </div>
+
+</body>
+</html>

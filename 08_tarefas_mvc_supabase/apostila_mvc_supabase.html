@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Apostila Autoinstrutiva: Arquitetura MVC com Flet e Banco de Dados Supabase</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.6;
+      color: #24292e;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4 {
+      color: #1a365d;
+      font-weight: 700;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      font-size: 24pt;
+      border-bottom: 3px solid #2b6cb0;
+      padding-bottom: 8px;
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 15.5pt;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-top: 26px;
+      margin-bottom: 12px;
+      color: #2b6cb0;
+    }
+
+    h3 {
+      font-size: 12.5pt;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      color: #2d3748;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    .capa {
+      text-align: center;
+      padding: 35px 20px;
+      border: 2px solid #2b6cb0;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ebf8ff 0%, #ffffff 100%);
+      margin-bottom: 30px;
+      page-break-after: always;
+    }
+
+    .capa h1 {
+      border: none;
+      font-size: 24pt;
+      color: #1a365d;
+      margin-bottom: 10px;
+    }
+
+    .capa .subtitulo {
+      font-size: 13.5pt;
+      color: #4a5568;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .capa .meta-info {
+      font-size: 10.5pt;
+      color: #2d3748;
+      margin-top: 30px;
+      line-height: 1.8;
+      border-top: 1px dashed #cbd5e0;
+      padding-top: 18px;
+    }
+
+    .box-destaque {
+      background-color: #ebf8ff;
+      border-left: 5px solid #3182ce;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-destaque h4 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: #2b6cb0;
+      font-size: 11pt;
+    }
+
+    .box-alerta {
+      background-color: #fff5f5;
+      border-left: 5px solid #e53e3e;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-alerta h4 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: #c53030;
+      font-size: 11pt;
+    }
+
+    .box-dica {
+      background-color: #f0fff4;
+      border-left: 5px solid #38a169;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-dica h4 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: #276749;
+      font-size: 11pt;
+    }
+
+    code {
+      font-family: "Consolas", "Courier New", Courier, monospace;
+      background-color: #edf2f7;
+      color: #c53030;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 10pt;
+    }
+
+    pre {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-family: "Consolas", monospace;
+      font-size: 9pt;
+      line-height: 1.45;
+      margin: 12px 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      page-break-inside: avoid;
+    }
+
+    .kwd { color: #569cd6; font-weight: bold; }
+    .com { color: #6a9955; font-style: italic; }
+    .str { color: #ce9178; }
+    .num { color: #b5cea8; }
+    .cls { color: #4ec9b0; }
+    .fnc { color: #dcdcaa; }
+    .slf { color: #9cdcfe; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e0;
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 9.5pt;
+    }
+
+    th {
+      background-color: #edf2f7;
+      color: #2d3748;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f7fafc;
+    }
+
+    .diagrama-mvc {
+      background-color: #f8fafc;
+      border: 1.5px dashed #cbd5e0;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .diagrama-mvc .bloco {
+      display: inline-block;
+      width: 28%;
+      vertical-align: top;
+      background: white;
+      border: 1.5px solid #2b6cb0;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 0 1.5%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .diagrama-mvc .bloco h5 {
+      margin: 0 0 6px 0;
+      color: #2b6cb0;
+      font-size: 10.5pt;
+      text-align: center;
+    }
+
+    .diagrama-mvc .bloco p {
+      font-size: 8.5pt;
+      margin: 0;
+      color: #4a5568;
+      text-align: center;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .rodape-pagina {
+      font-size: 9pt;
+      color: #a0aec0;
+      text-align: center;
+      margin-top: 30px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <div class="capa">
+    <div style="font-size: 11pt; text-transform: uppercase; letter-spacing: 2px; color: #718096; margin-bottom: 12px;">
+      Material Didático Autoinstrutivo • Nível Intermediário
+    </div>
+    <h1>ARQUITETURA MVC COM FLET E BANCO DE DADOS SUPABASE</h1>
+    <div class="subtitulo">
+      Da Interface Isolada aos Sistemas Comerciais Conectados à Nuvem
+    </div>
+
+    <div style="margin: 20px auto; width: 60px; height: 3px; background-color: #3182ce;"></div>
+
+    <p style="text-align: center; max-width: 580px; margin: 0 auto; color: #4a5568; font-size: 10.5pt;">
+      Guia autoinstrutivo para estudantes do Ensino Médio Técnico em Informática.
+      Aprenda a estruturar um sistema completo com o padrão arquitetural <strong>Model-View-Controller (MVC)</strong>,
+      persistência de dados no <strong>PostgreSQL na Nuvem (Supabase)</strong> e tratamento profissional de erros com <strong>try / except</strong>.
+    </p>
+
+    <div class="meta-info">
+      <strong>Disciplina:</strong> Linguagens de Programação<br>
+      <strong>Curso:</strong> Técnico em Informática Integrado ao Ensino Médio<br>
+      <strong>Tecnologias:</strong> Python 3 + Flet (v1.0) + Supabase + python-dotenv<br>
+      <strong>Projeto Analisado:</strong> <code>08_tarefas_mvc_supabase/</code>
+    </div>
+  </div>
+
+  <!-- 1. INTRODUÇÃO E O QUE É MVC -->
+  <h2>1. Apresentação: O Próximo Nível do Desenvolvedor</h2>
+  <p>
+    Nas aulas anteriores, você aprendeu a usar <strong>Classes e Herança</strong> para criar componentes visuais elegantes no Flet. O código da interface ficou muito mais limpo do que aquele código procedural do início!
+  </p>
+  <p>
+    No entanto, o nosso aplicativo ainda tinha duas grandes limitações que impediam que ele fosse um sistema profissional de verdade:
+  </p>
+  <ol>
+    <li>
+      <strong>Dados Voláteis:</strong> Quando você fechava a janela do Flet, todas as tarefas cadastradas sumiam, porque elas ficavam salvas apenas na memória RAM do computador.
+    </li>
+    <li>
+      <strong>Falta de Separação de Responsabilidades:</strong> Se colocássemos os comandos de banco de dados diretamente dentro do arquivo da tela ou da classe visual, o código voltaria a ficar misturado e difícil de manter.
+    </li>
+  </ol>
+  <p>
+    Neste material, nós resolvemos esses dois problemas de uma só vez utilizando o padrão mais famoso do mercado: a <strong>Arquitetura MVC</strong> conectada ao <strong>Banco de Dados Supabase (PostgreSQL na nuvem)</strong>!
+  </p>
+
+  <div class="page-break"></div>
+
+  <!-- 2. DIAGRAMA E EXPLICACAO DO MVC -->
+  <h2>2. O Padrão Arquitetural MVC (Model - View - Controller)</h2>
+  <p>
+    O padrão <strong>MVC</strong> divide o nosso software em três camadas fundamentais, onde cada arquivo tem um papel único e muito bem definido:
+  </p>
+
+  <div class="diagrama-mvc">
+    <div class="bloco">
+      <h5>1. MODEL (Modelo)</h5>
+      <p><strong>models/</strong></p>
+      <p style="text-align: justify; margin-top: 6px;">
+        Cuida dos <strong>dados</strong> e do <strong>acesso ao banco</strong>. Representa a entidade <code>Tarefa</code> e executa os comandos SQL (SELECT, INSERT, UPDATE, DELETE). Não sabe nada sobre janelas ou botões do Flet.
+      </p>
+    </div>
+    <div class="bloco">
+      <h5>2. VIEW (Visão)</h5>
+      <p><strong>views/</strong> e <strong>main.py</strong></p>
+      <p style="text-align: justify; margin-top: 6px;">
+        Cuida da <strong>aparência</strong> e da <strong>interação com o usuário</strong>. Desenha a tela, os botões, caixas de texto e os cards com Herança. Captura cliques e repassa para o Controller.
+      </p>
+    </div>
+    <div class="bloco">
+      <h5>3. CONTROLLER (Controlador)</h5>
+      <p><strong>controllers/</strong></p>
+      <p style="text-align: justify; margin-top: 6px;">
+        É o <strong>cérebro / maestro</strong> do sistema. Recebe os eventos da View, valida regras de negócio, chama os métodos do Model/SQL e manda a View atualizar a tela.
+      </p>
+    </div>
+  </div>
+
+  <div class="box-destaque">
+    <h4>🏫 A Analogia do Restaurante:</h4>
+    <ul>
+      <li><strong>A VIEW é o Cardápio e a Mesa:</strong> Onde o cliente (usuário) vê os pratos e escolhe o que quer.</li>
+      <li><strong>O CONTROLLER é o Garçom:</strong> Ouve o pedido da mesa, confere se o pedido é válido e leva até a cozinha. Depois, traz o prato pronto para a mesa.</li>
+      <li><strong>O MODEL é a Cozinha e a Despensa:</strong> Guarda os ingredientes (dados) e prepara a refeição (banco de dados). A despensa nunca fala direto com o cliente; tudo passa pelo garçom!</li>
+    </ul>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 3. ESTRUTURA DE PASTAS E SUPABASE -->
+  <h2>3. Estrutura do Projeto e Configuração do Supabase</h2>
+
+  <h3>3.1 Como os Arquivos Estão Organizados:</h3>
+  <pre><code>08_tarefas_mvc_supabase/
+├── database/
+│   ├── connect_supabase.py       # Leitura do .env, conexão segura e checagem de tabela
+│   └── schema.sql                # Script SQL DDL para criar a tabela no Supabase
+├── models/
+│   ├── model_tarefa.py           # Classe pura de dados Tarefa (id, nome, tipo, xp, concluida)
+│   └── sql_tarefa.py             # Classe SQL_Tarefa (SELECT, INSERT, UPDATE, DELETE)
+├── views/
+│   └── ft_tarefa.py              # Componentes visuais Flet com Herança (TarefaCard e subclasses)
+├── controllers/
+│   └── controle_tarefa.py        # O cérebro do sistema: coordena banco e tela
+├── .env.example                  # Arquivo modelo com SUPABASE_URL e SUPABASE_KEY
+├── .env                          # Suas credenciais reais (não enviado para o GitHub)
+└── main.py                       # Ponto de entrada que monta a tela e inicializa o sistema</code></pre>
+
+  <h3>3.2 Criando a Tabela no Supabase (SQL Editor)</h3>
+  <p>
+    O <strong>Supabase</strong> é uma plataforma moderna que hospeda um banco de dados relacional <strong>PostgreSQL</strong> na nuvem.
+    Para que nosso aplicativo funcione, precisamos criar a tabela <code>tarefas</code>. O arquivo <code>database/schema.sql</code> já vem com o script pronto:
+  </p>
+
+  <pre><code><span class="com">-- Execute este script no SQL Editor do painel do seu projeto Supabase:</span>
+<span class="kwd">CREATE TABLE IF NOT EXISTS</span> tarefas (
+    id <span class="cls">BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY</span>,
+    nome <span class="cls">TEXT NOT NULL</span>,
+    tipo <span class="cls">TEXT NOT NULL DEFAULT</span> <span class="str">'Comum'</span>,
+    xp <span class="cls">INT NOT NULL DEFAULT</span> <span class="num">10</span>,
+    concluida <span class="cls">BOOLEAN NOT NULL DEFAULT FALSE</span>,
+    criado_em <span class="cls">TIMESTAMP WITH TIME ZONE DEFAULT NOW()</span>
+);
+
+<span class="kwd">ALTER TABLE</span> tarefas <span class="kwd">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="kwd">CREATE POLICY</span> <span class="str">"Permitir acesso completo a tarefas"</span> <span class="kwd">ON</span> tarefas
+    <span class="kwd">FOR ALL</span>
+    <span class="kwd">USING</span> (<span class="kwd">true</span>)
+    <span class="kwd">WITH CHECK</span> (<span class="kwd">true</span>);</code></pre>
+
+  <div class="box-dica">
+    <h4>🔑 O Arquivo de Segredos: <code>.env</code></h4>
+    Nunca coloque chaves de API ou senhas de banco diretamente dentro do código Python!
+    Usamos o arquivo <code>.env</code> com a biblioteca <code>python-dotenv</code>.
+    Basta criar um arquivo com o nome exato <code>.env</code> e colar suas credenciais:
+    <pre style="margin: 6px 0;"><code>SUPABASE_URL=https://exemplo.supabase.co
+SUPABASE_KEY=sua-chave-anon-aqui</code></pre>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 4. NOVO CONCEITO: TRATAMENTO DE EXCEÇÕES -->
+  <h2>4. Novo Conceito Fundamental: Tratamento de Exceções com <code>try / except</code></h2>
+  <p>
+    Quando trabalhamos com banco de dados e serviços na nuvem, muitas coisas fora do nosso controle podem falhar: a internet do usuário pode cair, a senha pode estar errada ou a tabela pode não existir.
+  </p>
+  <p>
+    Sem tratamento de erros, o Python simplesmente trava e fecha a janela na cara do usuário com uma mensagem vermelha assustadora no terminal!
+    Para evitar isso, usamos o bloco <strong><code>try / except</code></strong>:
+  </p>
+
+  <pre><code><span class="kwd">try</span>:
+    <span class="com"># Tente executar este código que pode falhar:</span>
+    cliente = connect_supabase()
+    verificar_tabela_tarefas(cliente)
+<span class="kwd">except</span> <span class="cls">Exception</span> <span class="kwd">as</span> erro:
+    <span class="com"># Se der qualquer erro, o programa NÃO trava!</span>
+    <span class="com"># Ele pula para cá e podemos exibir uma tela amigável para o aluno:</span>
+    exibir_tela_erro_configuracao(page, str(erro))</code></pre>
+
+  <div class="box-destaque">
+    <h4>🛡️ Regra Prática:</h4>
+    Toda operação de <strong>rede</strong> ou de <strong>banco de dados</strong> (consultar, salvar, deletar) deve ser envolvida em um bloco <code>try / except</code> para que seu sistema seja resiliente e confiável.
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 5. ANÁLISE DOS ARQUIVOS LINHA POR LINHA -->
+  <h2>5. Análise Detalhada dos Arquivos do Projeto</h2>
+
+  <h3>5.1 O Modelo Puro de Dados: <code>models/model_tarefa.py</code></h3>
+  <p>
+    Este arquivo define o que é uma <code>Tarefa</code> no sistema. Observe que ele não importa Flet nem Supabase. É uma classe pura de Python (POO):
+  </p>
+  <pre><code><span class="kwd">class</span> <span class="cls">Tarefa</span>:
+    <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, nome: str, tipo: str = <span class="str">"Comum"</span>, xp: int = <span class="num">10</span>, concluida: bool = <span class="kwd">False</span>, id_tarefa: int = <span class="kwd">None</span>):
+        <span class="slf">self</span>.id = id_tarefa
+        <span class="slf">self</span>.nome = nome
+        <span class="slf">self</span>.tipo = tipo
+        <span class="slf">self</span>.xp = xp
+        <span class="slf">self</span>.concluida = concluida
+
+    <span class="kwd">def</span> <span class="fnc">alternar_conclusao</span>(<span class="slf">self</span>):
+        <span class="kwd">if</span> <span class="slf">self</span>.concluida:
+            <span class="slf">self</span>.concluida = <span class="kwd">False</span>
+        <span class="kwd">else</span>:
+            <span class="slf">self</span>.concluida = <span class="kwd">True</span>
+
+    <span class="kwd">def</span> <span class="fnc">para_dicionario</span>(<span class="slf">self</span>):
+        dados = {<span class="str">"nome"</span>: <span class="slf">self</span>.nome, <span class="str">"tipo"</span>: <span class="slf">self</span>.tipo, <span class="str">"xp"</span>: <span class="slf">self</span>.xp, <span class="str">"concluida"</span>: <span class="slf">self</span>.concluida}
+        <span class="kwd">if</span> <span class="slf">self</span>.id <span class="kwd">is not</span> <span class="kwd">None</span>:
+            dados[<span class="str">"id"</span>] = <span class="slf">self</span>.id
+        <span class="kwd">return</span> dados
+
+    @staticmethod
+    <span class="kwd">def</span> <span class="fnc">de_dicionario</span>(dados: dict):
+        <span class="kwd">return</span> Tarefa(
+            id_tarefa=dados.get(<span class="str">"id"</span>),
+            nome=dados.get(<span class="str">"nome"</span>, <span class="str">""</span>),
+            tipo=dados.get(<span class="str">"tipo"</span>, <span class="str">"Comum"</span>),
+            xp=dados.get(<span class="str">"xp"</span>, <span class="num">10</span>),
+            concluida=dados.get(<span class="str">"concluida"</span>, <span class="kwd">False</span>),
+        )</code></pre>
+
+  <h3>5.2 O Repositório de Acesso ao Banco: <code>models/sql_tarefa.py</code></h3>
+  <p>
+    Aqui mora o <strong>CRUD</strong>. É este arquivo que fala com a tabela no Supabase:
+  </p>
+  <ul>
+    <li><code>listar_todas()</code>: Faz <code>.select("*").order("id")</code> e transforma as linhas do banco em uma lista de objetos <code>Tarefa</code> usando um <code>for</code> tradicional e <code>.append()</code>.</li>
+    <li><code>inserir(tarefa)</code>: Faz o <code>.insert(...)</code> dos dados da tarefa e preenche o <code>tarefa.id</code> gerado pelo banco.</li>
+    <li><code>atualizar_status(id, concluida)</code>: Faz o <code>.update(...)</code> filtrando com <code>.eq("id", id)</code>.</li>
+    <li><code>excluir(id)</code>: Faz o <code>.delete()</code> filtrando com <code>.eq("id", id)</code>.</li>
+  </ul>
+
+  <div class="page-break"></div>
+
+  <h3>5.3 A Camada Visual com Herança: <code>views/ft_tarefa.py</code></h3>
+  <p>
+    Lembra do que aprendemos na aula anterior? Aqui reaproveitamos 100% da herança visual no Flet:
+  </p>
+  <ul>
+    <li><strong><code>TarefaCard(ft.Container)</code>:</strong> Superclasse que define o checkbox, o texto com estilo tachado (<code>LINE_THROUGH</code>), o selo de XP e o botão de exclusão.</li>
+    <li><strong>Subclasses Filhas:</strong>
+      <ul>
+        <li><code>TarefaComumCard</code>: Fundo azul claro e ícone <code>TASK_ALT</code> (+10 XP);</li>
+        <li><code>TarefaUrgenteCard</code>: Fundo vermelho claro e ícone <code>WARNING_AMBER</code> (+20 XP);</li>
+        <li><code>TarefaEpicaCard</code>: Fundo dourado e ícone <code>STAR</code> (+50 XP).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>5.4 O Maestro do Sistema: <code>controllers/controle_tarefa.py</code></h3>
+  <p>
+    O Controller é a cola que une o Model e a View:
+  </p>
+  <pre><code><span class="kwd">class</span> <span class="cls">ControleTarefa</span>:
+    <span class="kwd">def</span> <span class="fnc">__init__</span>(<span class="slf">self</span>, page, sql_tarefa, coluna_tarefas, texto_xp):
+        <span class="slf">self</span>.page = page
+        <span class="slf">self</span>.sql = sql_tarefa
+        <span class="slf">self</span>.coluna_tarefas = coluna_tarefas
+        <span class="slf">self</span>.texto_xp = texto_xp
+        <span class="slf">self</span>.xp_total = <span class="num">0</span>
+
+    <span class="kwd">def</span> <span class="fnc">adicionar_nova_tarefa</span>(<span class="slf">self</span>, nome: str, tipo: str):
+        <span class="com"># 1. Valida o nome</span>
+        <span class="kwd">if not</span> nome: <span class="kwd">return False</span>
+        
+        <span class="com"># 2. Cria o objeto Tarefa</span>
+        nova_tarefa = Tarefa(nome=nome, tipo=tipo, xp=xp, concluida=<span class="kwd">False</span>)
+        
+        <span class="com"># 3. Salva no banco de dados na nuvem</span>
+        <span class="slf">self</span>.sql.inserir(nova_tarefa)
+        
+        <span class="com"># 4. Cria o card visual com a subclasse correta</span>
+        card = criar_card_tarefa(nova_tarefa, <span class="slf">self</span>.alternar_conclusao_tarefa, <span class="slf">self</span>.remover_tarefa)
+        
+        <span class="com"># 5. Adiciona na tela</span>
+        <span class="slf">self</span>.coluna_tarefas.controls.append(card)
+        <span class="slf">self</span>.page.update()</code></pre>
+
+  <div class="page-break"></div>
+
+  <!-- 6. RESUMO DOS BENEFÍCIOS E EXERCÍCIOS -->
+  <h2>6. Comparativo Final: Por Que Essa Arquitetura Vale a Pena?</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>Passo 1 (Procedural)</th>
+        <th>Passo 2 (POO Simples)</th>
+        <th>Versão Atual (MVC + Supabase)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Persistência</strong></td>
+        <td>Memória RAM (some ao fechar)</td>
+        <td>Memória RAM (some ao fechar)</td>
+        <td><strong>PostgreSQL na Nuvem (Persistente para sempre)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Organização</strong></td>
+        <td>Tudo em 1 arquivo confuso</td>
+        <td>Interface limpa, mas sem banco</td>
+        <td><strong>Pastas separadas: models, views, controllers</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Tratamento de Erros</strong></td>
+        <td>Nenhum (trava ao menor erro)</td>
+        <td>Nenhum</td>
+        <td><strong><code>try/except</code> com tela de aviso didática</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Manutenção</strong></td>
+        <td>Muito difícil</td>
+        <td>Média</td>
+        <td><strong>Profissional e modular</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- EXERCÍCIOS DE FIXAÇÃO -->
+  <h2>7. Atividades Práticas para a Turma</h2>
+
+  <div class="box-destaque">
+    <h4>Exercício 1: Teste de Persistência Real</h4>
+    <p>
+      Execute o arquivo <code>main.py</code>. Cadastre 3 tarefas (uma de cada tipo) e marque duas como concluídas.
+      Em seguida, <strong>feche completamente a janela do Flet</strong> e rode o programa novamente.
+      As tarefas continuaram lá com o XP somado corretamente? Parabéns, você domina bancos de dados na nuvem!
+    </p>
+  </div>
+
+  <div class="box-destaque">
+    <h4>Exercício 2: Simulação de Queda de Internet (Testando o <code>try/except</code>)</h4>
+    <p>
+      Altere temporariamente a chave <code>SUPABASE_KEY</code> no seu arquivo <code>.env</code> para um valor qualquer errado.
+      Execute o <code>main.py</code> e observe como o programa não trava: ele abre uma tela amigável explicando o checklist de correção!
+      Depois de testar, volte a chave correta.
+    </p>
+  </div>
+
+  <div class="box-destaque">
+    <h4>Exercício 3: Adicionando um Novo Campo no Sistema</h4>
+    <p>
+      Desafio profissional: adicione uma nova coluna <code>categoria TEXT</code> no banco de dados e ajuste o <code>model_tarefa.py</code> e o <code>sql_tarefa.py</code> para gravarem esse novo dado!
+    </p>
+  </div>
+
+  <div class="rodape-pagina">
+    Disciplina de Linguagens de Programação • Curso Técnico em Informática • Material Autoinstrutivo MVC + Supabase
+  </div>
+
+</body>
+</html>

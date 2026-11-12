@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tutorial Passo a Passo: Configuração do Supabase e Chaves de API</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.6;
+      color: #24292e;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4 {
+      color: #1a365d;
+      font-weight: 700;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      font-size: 24pt;
+      border-bottom: 3px solid #2b6cb0;
+      padding-bottom: 8px;
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 15.5pt;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-top: 26px;
+      margin-bottom: 12px;
+      color: #2b6cb0;
+    }
+
+    h3 {
+      font-size: 12.5pt;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      color: #2d3748;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    .capa {
+      text-align: center;
+      padding: 35px 20px;
+      border: 2px solid #2b6cb0;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ebf8ff 0%, #ffffff 100%);
+      margin-bottom: 30px;
+      page-break-after: always;
+    }
+
+    .capa h1 {
+      border: none;
+      font-size: 24pt;
+      color: #1a365d;
+      margin-bottom: 10px;
+    }
+
+    .capa .subtitulo {
+      font-size: 13.5pt;
+      color: #4a5568;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .capa .meta-info {
+      font-size: 10.5pt;
+      color: #2d3748;
+      margin-top: 30px;
+      line-height: 1.8;
+      border-top: 1px dashed #cbd5e0;
+      padding-top: 18px;
+    }
+
+    .box-destaque {
+      background-color: #ebf8ff;
+      border-left: 5px solid #3182ce;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-destaque h4 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: #2b6cb0;
+      font-size: 11pt;
+    }
+
+    .box-alerta {
+      background-color: #fff5f5;
+      border-left: 5px solid #e53e3e;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-alerta h4 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: #c53030;
+      font-size: 11pt;
+    }
+
+    .box-dica {
+      background-color: #f0fff4;
+      border-left: 5px solid #38a169;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .box-dica h4 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: #276749;
+      font-size: 11pt;
+    }
+
+    code {
+      font-family: "Consolas", "Courier New", Courier, monospace;
+      background-color: #edf2f7;
+      color: #c53030;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 10pt;
+    }
+
+    pre {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-family: "Consolas", monospace;
+      font-size: 9pt;
+      line-height: 1.45;
+      margin: 12px 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      page-break-inside: avoid;
+    }
+
+    .passo-card {
+      border: 1px solid #cbd5e0;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      page-break-inside: avoid;
+    }
+
+    .passo-numero {
+      display: inline-block;
+      background-color: #2b6cb0;
+      color: white;
+      font-weight: bold;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 8px;
+      font-size: 10pt;
+    }
+
+    .passo-titulo {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #2d3748;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e0;
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 9.5pt;
+    }
+
+    th {
+      background-color: #edf2f7;
+      color: #2d3748;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f7fafc;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .rodape-pagina {
+      font-size: 9pt;
+      color: #a0aec0;
+      text-align: center;
+      margin-top: 30px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <div class="capa">
+    <div style="font-size: 11pt; text-transform: uppercase; letter-spacing: 2px; color: #718096; margin-bottom: 12px;">
+      Guia Prático e Tutorial Visual • Passo a Passo
+    </div>
+    <h1>CONFIGURAÇÃO DO BANCO SUPABASE & CHAVES DE API</h1>
+    <div class="subtitulo">
+      Como Executar os Comandos SQL, Obter as Credenciais e Configurar o Arquivo .env
+    </div>
+
+    <div style="margin: 20px auto; width: 60px; height: 3px; background-color: #3182ce;"></div>
+
+    <p style="text-align: center; max-width: 580px; margin: 0 auto; color: #4a5568; font-size: 10.5pt;">
+      Documento de apoio prático para estudantes do Ensino Médio Técnico em Informática.
+      Aprenda do zero a criar um projeto no Supabase, rodar o script de criação da tabela de tarefas (DDL) e configurar as chaves de acesso no arquivo <code>.env</code> para conectar seu aplicativo Python com o Flet.
+    </p>
+
+    <div class="meta-info">
+      <strong>Disciplina:</strong> Linguagens de Programação<br>
+      <strong>Curso:</strong> Técnico em Informática Integrado ao Ensino Médio<br>
+      <strong>Plataforma:</strong> Supabase (PostgreSQL na Nuvem) + python-dotenv<br>
+      <strong>Projeto Alvo:</strong> <code>08_tarefas_mvc_supabase/</code>
+    </div>
+  </div>
+
+  <!-- INTRODUÇÃO -->
+  <h2>1. O que é o Supabase e por que o utilizamos?</h2>
+  <p>
+    O <strong>Supabase</strong> é uma plataforma moderna na nuvem (conhecida como alternativa livre ao Google Firebase) que nos fornece um banco de dados relacional <strong>PostgreSQL</strong> completo, gratuito e pronto para uso.
+  </p>
+  <p>
+    Em vez de termos que instalar o PostgreSQL na máquina de cada aluno, configurar portas de rede ou servidores locais, o Supabase nos entrega uma URL e uma Chave de Acesso que permitem que o nosso programa Python salve e consulte dados pela internet com máxima facilidade e velocidade.
+  </p>
+
+  <div class="box-destaque">
+    <h4>🎯 O Objetivo Deste Tutorial:</h4>
+    Ao final deste guia, você terá:
+    <ol style="margin-top: 6px; margin-bottom: 0;">
+      <li>Criado um projeto gratuito no Supabase;</li>
+      <li>Executado o script SQL no <strong>SQL Editor</strong> para criar a tabela <code>tarefas</code>;</li>
+      <li>Copiado a <strong>Project URL</strong> e a <strong>Chave Anon/Public</strong>;</li>
+      <li>Criado e preenchido o arquivo <strong><code>.env</code></strong> na pasta do seu projeto Python.</li>
+    </ol>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PARTE 1: CRIANDO O PROJETO -->
+  <h2>2. Parte 1: Criando o Projeto no Supabase</h2>
+
+  <div class="passo-card">
+    <span class="passo-numero">1</span>
+    <span class="passo-titulo">Acessar o Painel do Supabase</span>
+    <p style="margin-top: 8px;">
+      Abra o navegador de sua preferência e acesse o site oficial: <br>
+      👉 <a href="https://supabase.com" target="_blank" style="color: #2b6cb0; font-weight: bold;">https://supabase.com</a>
+    </p>
+    <p>
+      Clique no botão verde <strong>"Start your project"</strong> ou em <strong>"Sign In"</strong>. Você pode fazer login diretamente com a sua conta do <strong>GitHub</strong> ou com o seu e-mail do Google institucional.
+    </p>
+  </div>
+
+  <div class="passo-card">
+    <span class="passo-numero">2</span>
+    <span class="passo-titulo">Criar uma Nova Organização e Projeto</span>
+    <p style="margin-top: 8px;">
+      Após entrar no painel (Dashboard), clique no botão verde <strong>"New Project"</strong> (Novo Projeto).
+      Preencha o formulário com os seguintes dados:
+    </p>
+    <ul>
+      <li><strong>Name (Nome do Projeto):</strong> Digite por exemplo <code>tarefas-flet</code> ou <code>sistema-tarefas-mvc</code>;</li>
+      <li><strong>Database Password (Senha do Banco):</strong> Crie uma senha forte e <strong>anote-a</strong> em um bloco de notas seguro (ou clique em <em>Generate a password</em> e copie);</li>
+      <li><strong>Region (Região do Servidor):</strong> Escolha a região mais próxima do Brasil, como <code>São Paulo (sa-east-1)</code> ou <code>US East (N. Virginia)</code>;</li>
+      <li><strong>Pricing Plan (Plano):</strong> Selecione <strong>Free Tier</strong> (Gratuito).</li>
+    </ul>
+    <p>
+      Clique em <strong>"Create new project"</strong>. O Supabase levará cerca de 1 a 2 minutos para preparar e provisionar o seu banco de dados na nuvem. Aguarde até a tela inicial do projeto carregar!
+    </p>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PARTE 2: RODANDO O SQL -->
+  <h2>3. Parte 2: Executando o Script SQL no SQL Editor</h2>
+  <p>
+    Para que o nosso código Python consiga salvar tarefas, precisamos criar a tabela <code>tarefas</code> dentro do PostgreSQL do Supabase. Nós fazemos isso usando o <strong>SQL Editor</strong> integrado da plataforma.
+  </p>
+
+  <div class="passo-card">
+    <span class="passo-numero">3</span>
+    <span class="passo-titulo">Abrir o SQL Editor</span>
+    <p style="margin-top: 8px;">
+      No menu lateral esquerdo do painel do Supabase, procure pelo ícone de um terminal com a sigla <strong>`&gt;_`</strong> ou pelo texto <strong>SQL Editor</strong> e clique nele.
+    </p>
+    <p>
+      Em seguida, clique no botão <strong>"New query"</strong> (ou no botão <strong>+</strong>) para abrir uma nova janela em branco de comandos SQL.
+    </p>
+  </div>
+
+  <div class="passo-card">
+    <span class="passo-numero">4</span>
+    <span class="passo-titulo">Colar e Executar o Script SQL</span>
+    <p style="margin-top: 8px;">
+      Copie exatamente o código SQL abaixo (que também está salvo no arquivo <code>database/schema.sql</code> do seu projeto):
+    </p>
+
+    <pre><code><span class="com">-- 1. Criação da tabela de tarefas</span>
+<span class="kwd">CREATE TABLE IF NOT EXISTS</span> tarefas (
+    id <span class="cls">BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY</span>,
+    nome <span class="cls">TEXT NOT NULL</span>,
+    tipo <span class="cls">TEXT NOT NULL DEFAULT</span> <span class="str">'Comum'</span>,
+    xp <span class="cls">INT NOT NULL DEFAULT</span> <span class="num">10</span>,
+    concluida <span class="cls">BOOLEAN NOT NULL DEFAULT FALSE</span>,
+    criado_em <span class="cls">TIMESTAMP WITH TIME ZONE DEFAULT NOW()</span>
+);
+
+<span class="com">-- 2. Habilita o sistema de segurança do PostgreSQL</span>
+<span class="kwd">ALTER TABLE</span> tarefas <span class="kwd">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="com">-- 3. Cria a política que permite SELECT, INSERT, UPDATE e DELETE pela chave anon</span>
+<span class="kwd">CREATE POLICY</span> <span class="str">"Permitir acesso completo a tarefas"</span> <span class="kwd">ON</span> tarefas
+    <span class="kwd">FOR ALL</span>
+    <span class="kwd">USING</span> (<span class="kwd">true</span>)
+    <span class="kwd">WITH CHECK</span> (<span class="kwd">true</span>);</code></pre>
+
+    <p style="margin-top: 8px;">
+      Cole este script dentro do editor e clique no botão verde <strong>"Run"</strong> (ou pressione o atalho <code>Ctrl + Enter</code>).
+    </p>
+    <p style="color: #276749; font-weight: bold;">
+      ✅ Se tudo der certo, você verá a mensagem verde no rodapé: <em>"Success. No rows returned"</em>. A sua tabela foi criada com sucesso!
+    </p>
+  </div>
+
+  <div class="passo-card">
+    <span class="passo-numero">5</span>
+    <span class="passo-titulo">Confirmar a Criação no Table Editor</span>
+    <p style="margin-top: 8px;">
+      No menu lateral esquerdo, clique no ícone de tabela chamado <strong>Table Editor</strong>.
+      Você verá a tabela <code>tarefas</code> listada com as colunas: <code>id</code>, <code>nome</code>, <code>tipo</code>, <code>xp</code>, <code>concluida</code> e <code>criado_em</code> prontas para receberem registros!
+    </p>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PARTE 3: PEGANDO AS CHAVES E CONFIGURANDO O .ENV -->
+  <h2>4. Parte 3: Coletando as Chaves de API e Criando o Arquivo .env</h2>
+  <p>
+    Para que o nosso programa Python saiba onde o banco está e tenha permissão de gravar dados, precisamos pegar duas informações secretas: a <strong>URL do Projeto</strong> e a <strong>Chave Anon/Public</strong>.
+  </p>
+
+  <div class="passo-card">
+    <span class="passo-numero">6</span>
+    <span class="passo-titulo">Localizar as Chaves de Conexão: Project Settings ➔ API Keys</span>
+    <p style="margin-top: 8px;">
+      No menu lateral esquerdo do painel do Supabase, siga exatamente esta rota:
+    </p>
+    <ol>
+      <li>Clique no ícone de <strong>Engrenagem (Project Settings)</strong> na parte inferior do menu lateral esquerdo;</li>
+      <li>Dentro do menu <strong>CONFIGURATION</strong>, clique na opção <strong>API Keys</strong> (caminho: <code>Project Settings ➔ API Keys</code>);</li>
+      <li>É exatamente nesta tela que você acessa a sua <strong>Publishable key</strong> (ou chave pública)!</li>
+    </ol>
+
+    <div class="box-destaque">
+      <h4>📍 Onde Fica Cada Informação no Painel:</h4>
+      <ul>
+        <li><strong>Publishable key:</strong> Acessada diretamente em <strong>Project Settings ➔ API Keys</strong>. Ela começa com o prefixo <code>sb_publishable_...</code>. É ela que você copia para a variável <code>SUPABASE_KEY</code> no seu arquivo <code>.env</code>.</li>
+        <li><strong>Legacy anon key:</strong> Se preferir a chave antiga (em formato JWT <code>eyJhbG...</code>), ela fica na mesma tela, na aba ao lado chamada <strong>Legacy anon, service_role API keys</strong>.</li>
+        <li><strong>Project URL:</strong> No menu lateral esquerdo, clique em <strong>Data API</strong>. Lá você verá o campo URL.
+          <br><strong>⚠️ ATENÇÃO COM O FINAL DA URL:</strong> O painel do Supabase exibe a URL com <code>/rest/v1/</code> no final (ex: <code>https://fulwfzlynmazwemlhyki.supabase.co/rest/v1/</code>). O Python precisa apenas da URL base (sem o <code>/rest/v1/</code>).
+          <br><em>Dica: O nosso código Python já foi programado para limpar o <code>/rest/v1/</code> automaticamente caso você esqueça, mas o ideal é deixar apenas <code>https://seu-id.supabase.co</code>!</em>
+        </li>
+      </ul>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Campo no Painel do Supabase</th>
+          <th>O que é e para que serve?</th>
+          <th>Variável correspondente no .env</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Project URL</strong> (em Data API)</td>
+          <td>O endereço web único do seu banco (ex: <code>https://fulwfzlynmazwemlhyki.supabase.co</code>)</td>
+          <td><code>SUPABASE_URL</code></td>
+        </tr>
+        <tr>
+          <td><strong>Publishable key</strong> (ou <em>anon public</em>)</td>
+          <td>A chave pública segura que autoriza o Flet a ler e gravar tarefas</td>
+          <td><code>SUPABASE_KEY</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box-alerta">
+      <h4>⚠️ ATENÇÃO MÁXIMA COM A CHAVE SECRETA:</h4>
+      Copie apenas a chave rotulada como <strong>Publishable key</strong> (ou <code>anon public</code>). <br>
+      <strong>NUNCA</strong> copie ou utilize a chave <code>Secret keys</code> / <code>service_role</code> no aplicativo do aluno! A chave secreta ignora todas as regras de segurança e nunca deve ser exposta.
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <div class="passo-card">
+    <span class="passo-numero">7</span>
+    <span class="passo-titulo">Criar o Arquivo .env no Projeto Python</span>
+    <p style="margin-top: 8px;">
+      Agora volte para o seu computador no VS Code (ou Antigravity) dentro da pasta: <br>
+      <code>C:\Users\alyso\Documents\python\POO_FLET\08_tarefas_mvc_supabase\</code>
+    </p>
+    <ol>
+      <li>Na raiz dessa pasta, crie um novo arquivo com o nome exato <strong><code>.env</code></strong> (com um ponto na frente e sem extensão <code>.txt</code>);</li>
+      <li>Abra o arquivo <code>.env</code> e digite a seguinte estrutura, colando as suas chaves reais logo após o sinal de igual (sem aspas e sem espaços):</li>
+    </ol>
+
+    <pre><code>SUPABASE_URL=https://seu-codigo-aqui.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.sua_chave_anon_aqui</code></pre>
+
+    <p style="margin-top: 8px;">
+      Salve o arquivo pressionando <code>Ctrl + S</code>.
+    </p>
+  </div>
+
+  <div class="box-dica">
+    <h4>💡 Por que usamos o arquivo .env?</h4>
+    O arquivo <code>.env</code> (Environment / Ambiente) é uma convenção mundial na programação. Ele permite que cada desenvolvedor tenha suas próprias credenciais no seu computador sem misturá-las com o código do sistema.
+    Quando você envia o projeto para o GitHub, o arquivo <code>.env</code> <strong>nunca é enviado</strong> (ele é ignorado pelo <code>.gitignore</code>), protegendo o seu banco contra invasões!
+  </div>
+
+  <!-- PARTE 4: TESTE FINAL DE CONEXÃO -->
+  <h2>5. Parte 4: Testando a Conexão de Ponta a Ponta</h2>
+  <p>
+    Com o script SQL executado e o arquivo <code>.env</code> salvo, o seu sistema está 100% configurado!
+    Para comprovar o funcionamento:
+  </p>
+
+  <ol>
+    <li>Abra o terminal na pasta do projeto:
+      <pre><code>cd "C:\Users\alyso\Documents\python\POO_FLET\08_tarefas_mvc_supabase"</code></pre>
+    </li>
+    <li>Execute o comando de inicialização do programa:
+      <pre><code>python main.py</code></pre>
+    </li>
+    <li>A tela do Flet irá abrir com o ícone verde de nuvem: <strong>"Tarefas com MVC + Supabase"</strong>!</li>
+    <li>Cadastre uma tarefa (ex: <em>"Apresentar projeto de POO"</em>).</li>
+    <li>Vá no seu navegador, abra o <strong>Table Editor</strong> do Supabase e atualize a página: a sua tarefa estará salva nas linhas do banco de dados na nuvem!</li>
+  </ol>
+
+  <div class="rodape-pagina">
+    Disciplina de Linguagens de Programação • Curso Técnico em Informática • Tutorial de Configuração Supabase
+  </div>
+
+</body>
+</html>
